@@ -3,6 +3,8 @@ import os
 from flask import Flask, render_template
 from flask_restful import Api
 
+from .modules.Detection import Detection
+
 def create_app(test_config = None):
     app = Flask(__name__, instance_relative_config = True)
     
@@ -22,7 +24,7 @@ def create_app(test_config = None):
         pass
     
     api = Api(app)
-
+    api.add_resource(Detection, '/detect')
 
     @app.route('/')
     def index():

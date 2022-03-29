@@ -29,6 +29,7 @@ demo.py --input=<input_file> --classifier=<classifier_name>
 ```
 cd web
 python3 -m venv venv
+# Tren windows thay / bang \
 . venv/bin/activate
 ```
 
@@ -37,4 +38,6 @@ Chạy server:
 pip install -r requirements.txt
 sudo chmod 0700 run_server.sh
 ./run_server.sh
+
+# Tren windows chay lan luot cac cau len trong run_server.sh
 ```
