@@ -33,6 +33,11 @@ python3 -m venv venv
 . venv/bin/activate
 ```
 
+Chú ý: nhớ cài sklearn!
+```
+pip install sklearn
+```
+
 Chạy server:
 ```
 pip install -r requirements.txt

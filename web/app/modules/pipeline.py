@@ -1,5 +1,9 @@
+from flask import current_app
+
 import pickle as pkl
 import re, string
+
+import os
 
 class Pipeline:
     def __init__(self):
@@ -16,7 +20,9 @@ class Pipeline:
             'linear_svc' : 'Linear Support Vector Classifier'
         }
 
-        with open(self.__model_folder + 'vectorizer.pkl', 'rb') as f:
+        vectorizer_path = os.path.join(current_app.root_path, self.__model_folder, 'vectorizer.pkl')
+
+        with open(vectorizer_path, 'rb') as f:
             self.__vectorizer = pkl.load(f)
 
     def __load_classifier(self, classifier_name : str):
@@ -29,7 +35,9 @@ class Pipeline:
         '''
         assert classifier_name in self.__classifiers_name.keys()
 
-        with open('{0}{1}.pkl'.format(self.__model_folder, classifier_name), 'rb') as f:
+        classifier_path = os.path.join(current_app.root_path, self.__model_folder, '{0}.pkl'.format(classifier_name))
+
+        with open(classifier_path, 'rb') as f:
             classifier = pkl.load(f)
         
         return classifier
@@ -69,7 +77,7 @@ class Pipeline:
         sentences = [Pipeline.preprocess(s) for s in sentences]
         classifier = self.__load_classifier(classifier)
         v_sentences = self.__vectorizer.transform(sentences)
-        return classifier.predict(v_sentences)
+        return classifier.predict(v_sentences).tolist()
     
     def predict_all(self, sentences : list) -> dict:
         '''Predict a list of sentences with all available classifiers.
@@ -81,6 +89,6 @@ class Pipeline:
         '''
         result = {}
         for classifier_key in self.__classifiers_name.keys():
-            result[classifier_key] = self.predict(classifier_key, sentences)
+            result[classifier_key] = self.predict(classifier_key, sentences)[0]
         
         return result
