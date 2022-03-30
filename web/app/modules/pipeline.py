@@ -41,6 +41,10 @@ class Pipeline:
             classifier = pkl.load(f)
         
         return classifier
+    
+    def get_classifiers_list(self) -> list:
+        '''Get classifiers list.'''
+        return self.__classifiers_name
 
     @staticmethod
     def preprocess(text : str) -> str:

@@ -6,7 +6,7 @@ from .pipeline import Pipeline
 class Detection(Resource):
     def __init__(self):
         self.__p = Pipeline()
-
+    
     def post(self):
         try:
             article_content = Utils.get_input('article_content')

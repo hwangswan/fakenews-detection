@@ -4,6 +4,7 @@ from flask import Flask, render_template
 from flask_restful import Api
 
 from .modules.Detection import Detection
+from .modules.pipeline import Pipeline
 
 def create_app(test_config = None):
     app = Flask(__name__, instance_relative_config = True)
@@ -28,6 +29,7 @@ def create_app(test_config = None):
 
     @app.route('/')
     def index():
-        return render_template('index.html')
+        classifiers_list = Pipeline().get_classifiers_list()
+        return render_template('index.html', classifiers_list = classifiers_list)
 
     return app
