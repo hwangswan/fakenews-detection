@@ -3,25 +3,34 @@ import re, string
 
 class Pipeline:
     def __init__(self):
-        self.__classifiers_name = [
-            'logistic_regression',
-            'sgd_classifier',
-            'decision_tree',
-            'gradient_boosting',
-            'random_forest',
-            'k_neighbors',
-            'naive_bayes',
-            'linear_svc'
-        ]
+        self.__classifiers_name = {
+            'logistic_regression' : 'Logistic Regression',
+            'sgd_classifier' : 'SGD Classifier',
+            'decision_tree' : 'Decision Tree',
+            'gradient_boosting' : 'Gradient Boosting',
+            'random_forest' : 'Random Forest Classifier',
+            'k_neighbors' : 'K-Nearest Neighbors',
+            'naive_bayes' : 'Multinomial Naive Bayes',
+            'linear_svc' : 'Linear Support Vector Classifier'
+        }
 
         with open('vectorizer.pkl', 'rb') as f:
             self.__vectorizer = pkl.load(f)
-    
-    def set_classifier(self, classifier_name):
-        assert classifier_name in self.__classifiers_name
+
+    def __load_classifier(self, classifier_name : str):
+        '''Load a classifier from pickle file.
+
+        Input:
+            - classifier_name : str
+        Output:
+            - Classifier object
+        '''
+        assert classifier_name in self.__classifiers_name.keys()
 
         with open('{0}.pkl'.format(classifier_name), 'rb') as f:
-            self.__classifier = pkl.load(f)
+            classifier = pkl.load(f)
+        
+        return classifier
 
     @staticmethod
     def preprocess(text : str) -> str:
@@ -46,14 +55,30 @@ class Pipeline:
         
         return text
 
-    def predict(self, sentences : list) -> list:
+    def predict(self, classifier : str, sentences : list) -> list:
         '''Predict a list of sentences.
 
         Input:
             - sentences : list of str
+            - classifier : classifier key
         Output:
             - list
         '''
         sentences = [Pipeline.preprocess(s) for s in sentences]
+        classifier = self.__load_classifier(classifier)
         v_sentences = self.__vectorizer.transform(sentences)
-        return self.__classifier.predict(v_sentences)
+        return classifier.predict(v_sentences)
+    
+    def predict_all(self, sentences : list) -> dict:
+        '''Predict a list of sentences with all available classifiers.
+
+        Input:
+            - sentences : list of str
+        Output
+            - Dictionary of keys -> classifier key, value -> predicted labels.
+        '''
+        result = {}
+        for classifier_key in self.__classifiers_name.keys():
+            result[classifier_key] = self.predict(classifier_key, sentences)
+        
+        return result
