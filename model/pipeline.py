@@ -3,6 +3,8 @@ import re, string
 
 class Pipeline:
     def __init__(self):
+        self.__model_folder = 'model/'
+
         self.__classifiers_name = {
             'logistic_regression' : 'Logistic Regression',
             'sgd_classifier' : 'SGD Classifier',
@@ -14,7 +16,7 @@ class Pipeline:
             'linear_svc' : 'Linear Support Vector Classifier'
         }
 
-        with open('vectorizer.pkl', 'rb') as f:
+        with open(self.__model_folder + 'vectorizer.pkl', 'rb') as f:
             self.__vectorizer = pkl.load(f)
 
     def __load_classifier(self, classifier_name : str):
@@ -27,7 +29,7 @@ class Pipeline:
         '''
         assert classifier_name in self.__classifiers_name.keys()
 
-        with open('{0}.pkl'.format(classifier_name), 'rb') as f:
+        with open('{0}{1}.pkl'.format(self.__model_folder, classifier_name), 'rb') as f:
             classifier = pkl.load(f)
         
         return classifier
