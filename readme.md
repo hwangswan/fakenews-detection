@@ -9,6 +9,9 @@ Công nghệ sử dụng:
 ## Dataset
 Dataset & example code tham khảo từ https://www.kaggle.com/therealsampat/fake-news-detection
 
+## Model generation
+Chạy file `model/model-training.ipynb`. File model sẽ được lưu trong folder `model/model`.
+
 ## Model pipeline
 ```
 demo.py --input=<input_file> --classifier=<classifier_name>
@@ -37,6 +40,8 @@ Chú ý: nhớ cài sklearn!
 ```
 pip install sklearn
 ```
+
+Copy folder `model/model` vào `web/app/model`
 
 Chạy server:
 ```
