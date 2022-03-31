@@ -25,11 +25,15 @@ def create_app(test_config = None):
         pass
     
     api = Api(app)
-    api.add_resource(Detection, '/detect')
+    api.add_resource(Detection, '/detect', endpoint = 'detect')
 
     @app.route('/')
     def index():
         classifiers_list = Pipeline().get_classifiers_list()
-        return render_template('index.html', classifiers_list = classifiers_list)
+        return render_template('html/index.html', classifiers_list = classifiers_list)
+
+    @app.route('/index_js')
+    def index_js():
+        return render_template('js/index.js')
 
     return app

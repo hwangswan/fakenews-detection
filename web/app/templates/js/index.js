@@ -4,8 +4,11 @@ $('#articleSubmit').on('click', function() {
   let articleContent = $('#articleContent').val();
 
   let request = $.ajax({
-    url : 'http://localhost:5000/detect?article_content=' + articleContent,
+    url : '{{ url_for('detect') }}',
     type : 'POST',
+    data : {
+      'article_content' : articleContent
+    }
   });
 
   request.done(function(response, textStatus, jqXHR) {
