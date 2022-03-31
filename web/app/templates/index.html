@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Fakenews Detection</title>
+    <link rel='stylesheet' href='{{ url_for("static", filename = "css/bootstrap.min.css") }}'/>
+  </head>
+
+  <body>
+    <div class='container'>
+      <div class='row'>
+        <div class='col-sm-10 offset-sm-1 text-center'>
+          <h1 class='page-title'>Fakenews Detection</h1>
+          <p>A project in Applied Natural Language Processing (CSC15008)</p>
+        </div>
+
+        <div class='col-sm-10 offset-sm-1 text-center'>
+          <form >
+            <div class='mb-3'>
+              <textarea id='articleContent' class='form-control' rows="10" required>Your article goes here..</textarea>
+            </div>
+
+            <div class='mb-3'>
+              <a id='articleSubmit' class='btn btn-lg btn-outline-primary' href='#'>Fake or real?</a>
+              <a class='btn btn-lg btn-outline-info' target='_blank' href='https://github.com/trhgquan/fakenews-detection'>Project repository on GitHub</a>
+            </div>
+          </form>
+        </div>
+
+        <div class='col-sm-6 offset-sm-3'>
+          <table class='table table-sm table-responsive'>
+            <thead>
+              <tr>
+                <th scope='col'>Algorithm name</th>
+                <th scope='col'>Prediction</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for classifier_id, classifier_name in classifiers_list.items() %}
+              <tr>
+                <td>{{ classifier_name }}</td>
+                <td><span id="{{ classifier_id }}" class="badge bg-secondary">Unknown</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script type='text/javascript' src='{{ url_for("static", filename = "js/jquery.min.js") }}'></script>
+    <script type='text/javascript' src='{{ url_for("static", filename = "js/bootstrap.min.js") }}'></script>
+    <script type='text/javascript' src='{{ url_for("static", filename = "js/index.js") }}'></script>
+  </body>
+</html>
