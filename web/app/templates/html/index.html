@@ -18,11 +18,12 @@
         <div class='col-sm-10 offset-sm-1 text-center'>
           <form >
             <div class='mb-3'>
-              <textarea id='articleContent' class='form-control' rows="10" required>Your article goes here..</textarea>
+              <textarea id='articleContent' class='form-control' rows="10" placeholder="Your article goes here..." required></textarea>
+              <div id='articleContent-error' class='invalid-feedback'></div>
             </div>
 
             <div class='mb-3'>
-              <a id='articleSubmit' class='btn btn-lg btn-outline-primary' href='#'>Fake or real?</a>
+              <button type='button' id='articleSubmit' class='btn btn-lg btn-outline-primary'>Fake or real?</a>
             </div>
           </form>
         </div>
