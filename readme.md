@@ -4,7 +4,7 @@
 Công nghệ sử dụng:
 - sklearn
 - Flask
-- Bootstrap v5
+- Bootstrap v5 (có jQuery)
 
 ## Dataset
 Dataset & example code tham khảo từ https://www.kaggle.com/therealsampat/fake-news-detection
@@ -12,8 +12,9 @@ Dataset & example code tham khảo từ https://www.kaggle.com/therealsampat/fak
 ## Model generation
 Chạy file `model/model-training.ipynb`. File model sẽ được lưu trong folder `model/model`.
 
-## Model pipeline
+## Demo prediction
 ```
+cd model
 demo.py --input=<input_file> --classifier=<classifier_name>
 ```
 
@@ -29,25 +30,37 @@ demo.py --input=<input_file> --classifier=<classifier_name>
 |`linear_svc`|Linear SVC|
 
 ## Server
+### Linux
 ```
 cd web
 python3 -m venv venv
-# Tren windows thay / bang \
 . venv/bin/activate
 ```
 
-Chú ý: nhớ cài sklearn!
+Copy model vào server directiory:
 ```
-pip install sklearn
+cd model
+bash migrate.sh
 ```
-
-Copy folder `model/model` vào `web/app/model`
 
 Chạy server:
 ```
 pip install -r requirements.txt
 sudo chmod 0700 run_server.sh
 ./run_server.sh
+```
 
-# Tren windows chay lan luot cac cau len trong run_server.sh
+### Windows
+```
+cd web
+python -m venv venv
+venv\Scripts\activate
+```
+
+Copy model vào server directory (từ `model/model` vào `web/app/model`)
+
+Chạy server:
+```
+pip install -r requirements.txt
+# Chay tung cau lenh trong web/run_server.sh
 ```
