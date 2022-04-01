@@ -1,8 +1,15 @@
 $('#articleSubmit').on('click', function() {
+  // Disable submit button
   $('#articleSubmit').prop('disabled', true);
 
+  // Remove every validation class and text.
+  $('#articleContent').removeClass('is-invalid');
+  $('#articleContent-error').text('');
+
+  // Get article content
   let articleContent = $('#articleContent').val();
 
+  // Send AJAX request.
   let request = $.ajax({
     url : '{{ url_for('detect') }}',
     type : 'POST',
@@ -11,6 +18,7 @@ $('#articleSubmit').on('click', function() {
     }
   });
 
+  // Request success without any errors.
   request.done(function(response, textStatus, jqXHR) {
     $.each(response.result, function(id, result) {
       let currentItem = $('#' + id);
@@ -21,7 +29,7 @@ $('#articleSubmit').on('click', function() {
 
       if (result == 1) {
         currentItem.addClass('bg-success');
-        currentItem.text('True news');
+        currentItem.text('Real news');
       }
 
       else {
@@ -31,10 +39,14 @@ $('#articleSubmit').on('click', function() {
     });
   });
 
+  // Error happened, set invalid class for textarea
+  // and set error message.
   request.fail(function(jqXHR, textStatus, errorThrown) {
-    console.error(textStatus, errorThrown);
+    $('#articleContent').addClass('is-invalid');
+    $('#articleContent-error').text(jqXHR.responseJSON.message);
   });
 
+  // Always enable submit button afterwards.
   request.always(function() {
     $('#articleSubmit').prop('disabled', false);
   });
