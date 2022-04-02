@@ -7,7 +7,7 @@ Công nghệ sử dụng:
 - Bootstrap v5 (có jQuery)
 
 ## Dataset
-Dataset & example code tham khảo từ https://www.kaggle.com/therealsampat/fake-news-detection
+Fake and real news dataset (Kaggle): https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset
 
 ## Model generation
 Chạy file `model/model-training.ipynb`. File model sẽ được lưu trong folder `model/model`.
