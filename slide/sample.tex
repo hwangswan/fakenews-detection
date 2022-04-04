@@ -7,7 +7,7 @@
 \usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
 
 \title[Fakenews Detection]{Fakenews Detection} % The short title appears at the bottom of every slide, the full title is only on the title page
-\subtitle{Đồ án cuối kỳ môn học Xử lý ngôn ngữ tự nhiên ứng dụng (CSC15008)}
+\subtitle{Đồ án môn học Xử lý ngôn ngữ tự nhiên ứng dụng (CSC15008)}
 
 \author[Quan-Tran] {Trần Hoàng Quân - Lê Hoàng Trọng Tín}
 
@@ -59,7 +59,7 @@
 \section{Fakenews Detection}
 
 \begin{frame}{Data}
-Dataset gồm 40000 bài báo được thu thập trong năm 2017. \href{https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset}{Link dataset trên Kaggle}
+Dataset gồm 44898 bài báo được thu thập trong năm 2017. \href{https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset}{Link dataset trên Kaggle}
 \begin{figure}
 \includegraphics[width=0.8\linewidth]{img/quick-glance-at-data.PNG}
 \end{figure}
@@ -217,6 +217,24 @@ weighted avg & 1.00 & 1.00 & 1.00 & 100 \\
     \Huge{\centerline{\textbf{Xem demo trực tiếp..}}}
 \end{frame}
 
+\begin{frame}{Tổng kết}
+Ưu điểm:
+\begin{itemize}
+\item Decision Tree là thuật toán phân lớp phổ biến, dễ cài đặt.
+\item Cho độ chính xác cao với tập dữ liệu nhỏ.
+\item Thời gian huấn luyện nhanh.
+\end{itemize}
+Khuyết điểm:
+\begin{itemize}
+\item Dễ bị overfit.
+\item `Nhạy cảm` với sự xáo trộn dữ liệu.\cite{p1}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{QnA}
+    \Huge{\centerline{\textbf{QnA}}}
+\end{frame}
+
 % \begin{frame}{Bullet Points}
 %     \begin{itemize}
 %         \item Lorem ipsum dolor sit amet, consectetur adipiscing elit
@@ -316,9 +334,9 @@ weighted avg & 1.00 & 1.00 & 1.00 & 100 \\
     % Beamer does not support BibTeX so references must be inserted manually as below
     \footnotesize{
         \begin{thebibliography}{99}
-            \bibitem[Smith, 2012]{p1} John Smith (2012)
-            \newblock Title of the publication
-            \newblock \emph{Journal Name} 12(3), 45 -- 678.
+            \bibitem[Kowsari, 2019]{p1} Kowsari and  Jafari Meimandi and  Heidarysafa and  Mendu and  Barnes and  Brown (2019)
+            \newblock Text Classification Algorithms: A Survey
+            \newblock \emph{Information} 10(4), 150
         \end{thebibliography}
     }
 \end{frame}
@@ -326,7 +344,7 @@ weighted avg & 1.00 & 1.00 & 1.00 & 100 \\
 %------------------------------------------------
 
 \begin{frame}
-    \Huge{\centerline{\textbf{The End}}}
+    \Huge{\centerline{\textbf{Fin}}}
 \end{frame}
 
 %----------------------------------------------------------------------------------------
