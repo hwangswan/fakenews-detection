@@ -122,7 +122,7 @@ london  reuters    abdul daoud spilt most of the cappuccino into the saucer the 
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Feature Extraction - TFIDF}
+\begin{frame}{Feature Extraction - TF-IDF}
 \begin{itemize}
 \item Term Frequency - Inverse Document Frequency
 \item Phương pháp này làm giảm ảnh hưởng của những từ thường xuyên xuất hiện trong corpus.
@@ -154,10 +154,12 @@ H(\textbf{p}) = -\sum_{i = 1}^n p_i\log(p_i)
 $$
 Với $\textbf{p} = (p_1, p_2, .., p_n)$ là phân phối sao cho biến ngẫu nhiên $x$ nhận $n$ giá trị $(x_1, x_2, .., x_n)$ và xác suất lần lượt là $(p_1, p_2, .., p_n)$.
 
-\item Ví dụ: một tập dữ liệu có $p$ samples được gán nhãn \textit{positive} và $n$ nhãn \textit{negative}. Khi đó entropy $H(\frac{p}{n + p}, \frac{n}{n + p})$ được tính như sau:
+\begin{itemize}
+\item Ví dụ: một tập dữ liệu có $p$ samples được gán nhãn \textit{positive} và $n$ samples được gán nhãn \textit{negative}. Khi đó entropy $H(\frac{p}{n + p}, \frac{n}{n + p})$ được tính như sau:
 $$
 H\left(\frac{p}{n + p}, \frac{n}{n + p}\right) = - \frac{p}{n + p}\log\left(\frac{p}{n + p}\right) - \frac{n}{n + p}\log\left(\frac{n}{n + p}\right)
 $$
+\end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -177,12 +179,13 @@ $$
 
 \begin{frame}{Training \& testing}
 \begin{figure}
-\includegraphics[width=0.4\linewidth]{img/real-fake-in-train.png}
+\includegraphics[width=0.35\linewidth]{img/real-fake-in-train.png}
 \caption{Tương quan các lớp fake (0) và real (1) trong tập train}
 \end{figure}
 
 \begin{itemize}
-\item Kích thước tập test 100 phần tử = chọn ngẫu nhiên 50 article từ tập real + 50 article từ tập fake.
+\item Kích thước tập train 44798 samples, gồm các articles đã được gán nhãn 0 (fake) và 1 (real).
+\item Kích thước tập test 100 samples = chọn ngẫu nhiên 50 article từ tập real + 50 article từ tập fake.
 \item Sử dụng \texttt{sklearn.tree.DecisionTreeClassifier}
 \end{itemize}
 \end{frame}
@@ -210,6 +213,8 @@ weighted avg & 1.00 & 1.00 & 1.00 & 100 \\
 \caption{\texttt{classification\_report} sau khi train}
 \end{table}
 \end{columns}
+
+Nhận xét: độ chính xác gần như tuyệt đối (1.00)
 \end{frame}
 
 \section{Demo}
