@@ -11,7 +11,7 @@ $('#articleSubmit').on('click', function() {
 
   // Send AJAX request.
   let request = $.ajax({
-    url : '{{ url_for('detect') }}',
+    url : '{{ url_for("detect") }}',
     type : 'POST',
     data : {
       'article_content' : articleContent
@@ -20,6 +20,15 @@ $('#articleSubmit').on('click', function() {
 
   // Request success without any errors.
   request.done(function(response, textStatus, jqXHR) {
+    let classificationResult = $('#classificationResult');
+
+    // Remove previous state of classification result.
+    classificationResult.text('');
+    classificationResult.removeClass('bg-danger');
+    classificationResult.removeClass('bg-success');
+
+    let trueCounts = 0, fakeCounts = 0;
+
     $.each(response.result, function(id, result) {
       let currentItem = $('#' + id);
       currentItem.removeClass('bg-secondary');
@@ -29,14 +38,25 @@ $('#articleSubmit').on('click', function() {
 
       if (result == 1) {
         currentItem.addClass('bg-success');
-        currentItem.text('Real news');
+        currentItem.text('True news');
+        ++trueCounts;
       }
 
       else {
         currentItem.addClass('bg-danger');
         currentItem.text('Fake news');
+        ++fakeCounts;
       }
     });
+
+    if (trueCounts > fakeCounts) {
+      classificationResult.text('True news');
+      classificationResult.addClass('bg-success');
+    }
+    else {
+      classificationResult.text('Fake news');
+      classificationResult.addClass('bg-danger');
+    }
   });
 
   // Error happened, set invalid class for textarea
