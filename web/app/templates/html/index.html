@@ -19,15 +19,15 @@
           <form >
             <div class='mb-3'>
               <textarea id='articleContent' class='form-control' rows="10" placeholder="Your article goes here..." required></textarea>
-              <div id='articleContent-error' class='invalid-feedback'></div>
+              <div id='articleContent-message'></div>
             </div>
 
             <div class='mb-3'>
-              <button type='button' id='articleSubmit' class='btn btn-lg btn-outline-primary'>Fake or real?</a>
+              <button type='button' id='articleSubmit' class='btn btn-lg btn-outline-primary'>Fake or real?</button>
             </div>
           </form>
         </div>
-
+        
         <div class='col-sm-6 offset-sm-3'>
           <table class='table table-sm table-responsive'>
             <thead>
@@ -40,16 +40,10 @@
               {% for classifier_id, classifier_name in classifiers_list.items() %}
               <tr>
                 <td>{{ classifier_name }}</td>
-                <td><span id="{{ classifier_id }}" class="badge bg-secondary">Unknown</td>
+                <td><span id='{{ classifier_id }}' class='badge bg-secondary'>Unknown</td>
               </tr>
               {% endfor %}
             </tbody>
-            <tfoot>
-              <tr>
-                <td>Result</td>
-                <td><span id='classificationResult' class="badge bg-secondary">Unknown</span></td>
-              </tr>
-            </tfoot>
           </table>
         </div>
       </div>
