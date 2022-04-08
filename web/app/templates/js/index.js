@@ -4,7 +4,11 @@ $('#articleSubmit').on('click', function() {
 
   // Remove every validation class and text.
   $('#articleContent').removeClass('is-invalid');
-  $('#articleContent-error').text('');
+  $('#articleContent').removeClass('is-valid');
+
+  $('#articleContent-message').removeClass('invalid-feedback');
+  $('#articleContent-message').removeClass('valid-feedback');
+  $('#articleContent-message').text('');
 
   // Get article content
   let articleContent = $('#articleContent').val();
@@ -20,17 +24,11 @@ $('#articleSubmit').on('click', function() {
 
   // Request success without any errors.
   request.done(function(response, textStatus, jqXHR) {
-    let classificationResult = $('#classificationResult');
-
-    // Remove previous state of classification result.
-    classificationResult.text('');
-    classificationResult.removeClass('bg-danger');
-    classificationResult.removeClass('bg-success');
-
     let trueCounts = 0, fakeCounts = 0;
 
     $.each(response.result, function(id, result) {
       let currentItem = $('#' + id);
+  
       currentItem.removeClass('bg-secondary');
       currentItem.removeClass('bg-success');
       currentItem.removeClass('bg-danger');
@@ -49,13 +47,17 @@ $('#articleSubmit').on('click', function() {
       }
     });
 
+    // Conclusion
     if (trueCounts > fakeCounts) {
-      classificationResult.text('True news');
-      classificationResult.addClass('bg-success');
+      $('#articleContent').addClass('is-valid');
+      $('#articleContent-message').addClass('valid-feedback');
+      $('#articleContent-message').text('This could be a True News');
     }
+
     else {
-      classificationResult.text('Fake news');
-      classificationResult.addClass('bg-danger');
+      $('#articleContent').addClass('is-invalid');
+      $('#articleContent-message').addClass('invalid-feedback');
+      $('#articleContent-message').text('This could be a Fake News');
     }
   });
 
@@ -63,7 +65,8 @@ $('#articleSubmit').on('click', function() {
   // and set error message.
   request.fail(function(jqXHR, textStatus, errorThrown) {
     $('#articleContent').addClass('is-invalid');
-    $('#articleContent-error').text(jqXHR.responseJSON.message);
+    $('#articleContent-message').addClass('invalid-feedback');
+    $('#articleContent-message').text(jqXHR.responseJSON.message);
   });
 
   // Always enable submit button afterwards.
