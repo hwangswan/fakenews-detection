@@ -10,6 +10,7 @@ Công nghệ sử dụng:
 Fake and real news dataset (Kaggle): https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset
 
 ## Model generation
+- Đọc kỹ hướng dẫn trong file `model/data-cleaning.ipynb`, sau đó chạy file.
 - Chạy file `model/model-training.ipynb`. File model sẽ được lưu trong folder `model/model`.
 - Chạy `model/migrate.sh` để copy model sang đúng vị trí trên server.
 
