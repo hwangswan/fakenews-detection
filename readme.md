@@ -2,7 +2,6 @@
 Đồ án môn học Xử lý ngôn ngữ tự nhiên ứng dụng - CSC15008
 
 Công nghệ sử dụng:
-- sklearn
 - Flask
 - Bootstrap v5 (có jQuery)
 
@@ -32,6 +31,7 @@ demo.py --input=<input_file> --classifier=<classifier_name>
 |`linear_svc`|Linear SVC|
 
 ## Server
+
 ### Linux
 ```
 cd web
@@ -66,3 +66,5 @@ Chạy server:
 pip install -r requirements.txt
 # Chay tung cau lenh trong web/run_server.sh
 ```
+
+VNUHCM - University of Science, mùa Xuân 2022
