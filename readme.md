@@ -1,9 +1,10 @@
 # Fakenews Detection
 Đồ án môn học Xử lý ngôn ngữ tự nhiên ứng dụng - CSC15008
 
-Công nghệ sử dụng:
-- Flask
-- Bootstrap v5 (có jQuery)
+VNUHCM - University of Science, mùa Xuân 2022
+
+## Abstraction
+Đối với bài toán Text Classification, nhóm xây dựng ứng dụng phát hiện tin giả (Fakenews Detection), sử dụng một số mô hình máy học để đưa ra dự đoán một mẩu tin là thật (true) hay giả (fake).
 
 ## Dataset
 Fake and real news dataset (Kaggle): https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset
@@ -29,6 +30,10 @@ demo.py --input=<input_file> --classifier=<classifier_name>
 |`k_neighbors`|K-Nearest Neighbors|
 |`naive_bayes`|Naive Bayes|
 |`linear_svc`|Linear SVC|
+
+## Tech used
+- Flask
+- Bootstrap v5 (có jQuery)
 
 ## Server
 
@@ -66,5 +71,3 @@ Chạy server:
 pip install -r requirements.txt
 # Chay tung cau lenh trong web/run_server.sh
 ```
-
-VNUHCM - University of Science, mùa Xuân 2022
