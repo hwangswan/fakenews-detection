@@ -6,6 +6,9 @@
 \usepackage{graphicx} % Allows including images
 \usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
 
+\usepackage[backend=biber]{biblatex}
+\addbibresource{sample.bib}
+
 \title[Fakenews Detection]{Ứng dụng Decision Tree xây dựng \\ công cụ Fakenews Detection} % The short title appears at the bottom of every slide, the full title is only on the title page
 \subtitle{Đồ án môn học Xử lý ngôn ngữ tự nhiên ứng dụng (CSC15008)}
 
@@ -41,7 +44,7 @@
 
 \begin{frame}{Giới thiệu đồ án}
 \begin{alertblock}{Nghe có vẻ \textbf{thật}, nhưng đây là \textbf{fake news}}
-"I like your Christ, I do not like your Christians. Your Christians are so unlike your Christ. That's a pretty easy quote from Gandhi to understand. The man was complicated and problematic in a lot of ways, but this one quote never loses its edge for me, because it's so simple. I have no doubt, however, that firebrand GOP Senate hopeful Roy Moore would dismiss it as the ramblings of a skinny brown cultist."
+"Wikileaks released tonight a new cache of documents, showing that the United States  National Security Administration bugged private meetings between major world leaders, including the United Nations Secretary General.The N.S.A. bugged meetings between U.N.S.G. Ban Ki-Moon, German chancellor Angela Merkel, Italian prime minister Silvio Berlusconi, Israeli prime minister Benjamin Netanyahu, and several representatives from other major world governments, listening in on their conversations on climate change, global economics, and even  how to deal with Obama,  according to the new documents. "
 \end{alertblock}
 \end{frame}
 
@@ -56,8 +59,8 @@
 \end{itemize}
 \end{frame}
 
-\section{Fakenews Detection}
-
+\section{Fakenews Detection w. Decision Tree}
+\subsection{Data}
 \begin{frame}{Data}
 Dataset gồm 44898 bài báo được thu thập trong năm 2017. \href{https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset}{Link dataset trên Kaggle}
 \begin{figure}
@@ -66,6 +69,7 @@ Dataset gồm 44898 bài báo được thu thập trong năm 2017. \href{https:/
 \end{frame}
 
 \begin{frame}{Preprocessing}
+\subsection{Preprocessing}
 \begin{itemize}
 \item Ta cần chỉnh sửa cấu trúc dataset:
 \begin{itemize}
@@ -134,6 +138,7 @@ Với $N$ là tổng số document, $df(t)$ là số lượng document chứa te
 \end{itemize}
 \end{frame}
 
+\subsection{Decision Tree}
 \begin{frame}{Decision Tree (cây quyết định)}
 Nhắc lại:
 \begin{itemize}
@@ -177,6 +182,15 @@ Ta sẽ chọn thuộc tính có Information Gain lớn nhất làm nút cha.
 \end{itemize}
 \end{frame}
 
+\begin{frame}{Decision Tree (cont.) - so sánh}
+    \begin{figure}
+        \centering
+        \includegraphics[scale=.2]{img/classifiers-comparison.png}
+        \caption{So sánh các classifier, nguồn \cite{scikit-learn}}
+    \end{figure}
+\end{frame}
+
+\subsection{Training \& testing}
 \begin{frame}{Training \& testing}
 \begin{figure}
 \includegraphics[width=0.35\linewidth]{img/real-fake-in-train.png}
@@ -184,8 +198,8 @@ Ta sẽ chọn thuộc tính có Information Gain lớn nhất làm nút cha.
 \end{figure}
 
 \begin{itemize}
-\item Kích thước tập train 44798 samples, gồm các articles đã được gán nhãn 0 (fake) và 1 (real).
-\item Kích thước tập test 100 samples = chọn ngẫu nhiên 50 article từ tập real + 50 article từ tập fake.
+\item Kích thước tập train: 44798 samples, gồm các articles đã được gán nhãn 0 (fake) và 1 (real).
+\item Kích thước tập test: 100 samples, gồm 50 article được chọn ngẫu nhiên từ tập real + 50 article được chọn ngẫu nhiên từ tập fake.
 \item Sử dụng \texttt{sklearn.tree.DecisionTreeClassifier}
 \end{itemize}
 \end{frame}
@@ -231,8 +245,8 @@ Nhận xét: độ chính xác gần như tuyệt đối (1.00)
 \end{itemize}
 Khuyết điểm:
 \begin{itemize}
-\item Dễ bị overfit. Xử lý: pruning
-\item `Nhạy cảm` với sự xáo trộn dữ liệu.\cite{p1}
+\item Dễ bị overfit. Xử lý: pruning.
+\item `Nhạy cảm` với sự xáo trộn dữ liệu.\cite{Kowsari_2019}
 \end{itemize}
 \end{frame}
 
@@ -337,13 +351,7 @@ Khuyết điểm:
 
 \begin{frame}{Tài liệu}
     % Beamer does not support BibTeX so references must be inserted manually as below
-    \footnotesize{
-        \begin{thebibliography}{99}
-            \bibitem[Kowsari, 2019]{p1} Kowsari and  Jafari Meimandi and  Heidarysafa and  Mendu and  Barnes and  Brown (2019)
-            \newblock Text Classification Algorithms: A Survey
-            \newblock \emph{Information} 10(4), 150
-        \end{thebibliography}
-    }
+    \printbibliography
 \end{frame}
 
 %------------------------------------------------
