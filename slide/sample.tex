@@ -6,7 +6,7 @@
 \usepackage{graphicx} % Allows including images
 \usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
 
-\title[Fakenews Detection]{Fakenews Detection} % The short title appears at the bottom of every slide, the full title is only on the title page
+\title[Fakenews Detection]{Ứng dụng Decision Tree xây dựng \\ công cụ Fakenews Detection} % The short title appears at the bottom of every slide, the full title is only on the title page
 \subtitle{Đồ án môn học Xử lý ngôn ngữ tự nhiên ứng dụng (CSC15008)}
 
 \author[Quan-Tran] {Trần Hoàng Quân - Lê Hoàng Trọng Tín}
@@ -116,7 +116,7 @@ london  reuters    abdul daoud spilt most of the cappuccino into the saucer the 
 \begin{frame}{Feature Extraction}
 \begin{itemize}
 \item Ta không `học thuộc` một câu, mà chỉ `học` những gì đặc trưng của câu đó.
-\item Có nhiều cách trích xuất đặc trưng của câu: Word2Vec, TF-IDF, GloVe, Bag of Words (BoW)..etc
+\item Có nhiều cách trích xuất đặc trưng của câu: TF-IDF, BoW (đánh trọng số); GloVe, Word2Vec (chuyển câu thành dạng vector)
 \item Một cách làm `tầm thường`: tính tần suất xuất hiện của những từ trong câu (trong đoạn văn / bài viết) và dựa trên tần suất lựa chọn các từ đặc trưng (TF).
 \item Loại bỏ stopwords!
 \end{itemize}
@@ -146,7 +146,7 @@ Nhắc lại:
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Decision Tree (cont.)}
+\begin{frame}{Decision Tree (cont.) - Feature Selection}
 \begin{itemize}
 \item Hàm số Entropy:
 $$
@@ -163,9 +163,9 @@ $$
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Decision Tree (cont.)}
+\begin{frame}{Decision Tree (cont.) - Feature Selection}
 \begin{itemize}
-\item Chọn thuộc tính $A$ có $k$ giá trị khác nhau, chia tập train $E$ thành các tập con $\{E_1, E_2, .., E_k\}$. Entropy kỳ vọng (EH) còn lại sau khi chọn $A$ là một nút:
+\item Chọn thuộc tính $A$ có $k$ giá trị khác nhau, chia tập train $E$ thành các tập con $\{E_1, E_2, .., E_k\}$. \textbf{Entropy kỳ vọng (EH)} còn lại sau khi chọn $A$ là một nút:
 $$
 EH(A) = \sum_{i = 1}^{k} \frac{p_i + n_i}{p + n} H\left(\frac{p_i}{n_i + p_i}, \frac{n_i}{n_i + p_i}\right)
 $$
@@ -173,7 +173,7 @@ $$
 $$
 A(I) = H\left(\frac{p}{n + p}, \frac{n}{n + p}\right) - EH(A)
 $$
-\item Ta sẽ chọn thuộc tính có Information Gain lớn nhất làm nút cha.
+Ta sẽ chọn thuộc tính có Information Gain lớn nhất làm nút cha.
 \end{itemize}
 \end{frame}
 
@@ -231,7 +231,7 @@ Nhận xét: độ chính xác gần như tuyệt đối (1.00)
 \end{itemize}
 Khuyết điểm:
 \begin{itemize}
-\item Dễ bị overfit.
+\item Dễ bị overfit. Xử lý: pruning
 \item `Nhạy cảm` với sự xáo trộn dữ liệu.\cite{p1}
 \end{itemize}
 \end{frame}
