@@ -10,8 +10,8 @@ VNUHCM - University of Science, mùa Xuân 2022
 Fake and real news dataset (Kaggle): https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset
 
 ## Model generation
-- Đọc kỹ hướng dẫn trong file `model/data-cleaning.ipynb`, sau đó chạy file.
-- Chạy file `model/model-training.ipynb`. File model sẽ được lưu trong folder `model/model`.
+- Đọc kỹ hướng dẫn trong file `model/data-cleaning.ipynb`, sau đó chạy file `model/datacleaning.py`.
+- Đọc file `model/model-training.ipynb`, sau đó chạy file `model/train.py`. File model sẽ được lưu trong folder `model/model`.
 - Chạy `model/migrate.sh` để copy model sang đúng vị trí trên server.
 
 ## Demo prediction
@@ -36,6 +36,9 @@ demo.py --input=<input_file> --classifier=<classifier_name>
 - Bootstrap v5 (có jQuery)
 
 ## Server
+```
+pip install -r requirements.txt
+```
 
 ### Linux
 ```
@@ -52,7 +55,6 @@ bash migrate.sh
 
 Chạy server:
 ```
-pip install -r requirements.txt
 sudo chmod 0700 run_server.sh
 ./run_server.sh
 ```
@@ -68,6 +70,5 @@ Copy model vào server directory (từ `model/model` vào `web/app/model`)
 
 Chạy server:
 ```
-pip install -r requirements.txt
 # Chay tung cau lenh trong web/run_server.sh
 ```
