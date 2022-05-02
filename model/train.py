@@ -6,8 +6,6 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.svm import LinearSVC
 from sklearn.metrics import classification_report
-from nltk import word_tokenize
-from nltk.corpus import stopwords
 
 import pandas as pd
 import pickle as pkl
@@ -38,10 +36,7 @@ class Train:
         print('Finished reading dataset')
 
         # Create vectorizer
-        self.__vectorizer = TfidfVectorizer(
-            stop_words = stopwords.words('english'),
-            tokenizer = word_tokenize,
-        )
+        self.__vectorizer = TfidfVectorizer()
 
         self.__X_train = self.__vectorizer.fit_transform(X_train)
         self.__X_test = self.__vectorizer.transform(X_test)
