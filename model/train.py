@@ -36,7 +36,9 @@ class Train:
         print('Finished reading dataset')
 
         # Create vectorizer
-        self.__vectorizer = TfidfVectorizer()
+        self.__vectorizer = TfidfVectorizer(
+            stop_words = 'english',
+        )
 
         self.__X_train = self.__vectorizer.fit_transform(X_train)
         self.__X_test = self.__vectorizer.transform(X_test)
