@@ -3,37 +3,66 @@
 
 \usepackage[utf8]{vietnam}
 \usepackage{hyperref}
-\usepackage{graphicx} % Allows including images
-\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tikz, forest}
+
+\usetikzlibrary{arrows.meta, shapes}
+\forestset{
+	.style={
+		for tree={
+			base=bottom,
+			child anchor=north,
+			s sep+=1cm,
+			straight edge/.style={
+				edge path={\noexpand\path[\forestoption{edge},thick,-{Latex}] 
+					(!u.parent anchor) -- (.child anchor);}
+			},
+			if n children={0}
+			{tier=word, draw, thick, rectangle}
+			{draw, diamond, thick, aspect=2},
+			if n=1{%
+				edge path={\noexpand\path[\forestoption{edge},thick,-{Latex}] 
+					(!u.parent anchor) -| (.child anchor) node[pos=.2, above] {Y};}
+			}{
+				edge path={\noexpand\path[\forestoption{edge},thick,-{Latex}] 
+					(!u.parent anchor) -| (.child anchor) node[pos=.2, above] {N};}
+			}
+		}
+	}
+}
 
 \usepackage[backend=biber]{biblatex}
 \addbibresource{sample.bib}
 
-\title[Fakenews Detection]{Ứng dụng Decision Tree xây dựng \\ công cụ Fakenews Detection} % The short title appears at the bottom of every slide, the full title is only on the title page
+\title[Fakenews Detection]{Ứng dụng Decision Tree xây dựng \\ công cụ Fakenews Detection}
 \subtitle{Đồ án môn học Xử lý ngôn ngữ tự nhiên ứng dụng (CSC15008)}
 
 \author[Quan-Tran] {Trần Hoàng Quân - Lê Hoàng Trọng Tín}
 
-\institute[HCMUS] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
+\institute[HCMUS]
 {
     Khoa Công nghệ thông tin \\
-    Trường Đại học Khoa học Tự nhiên - ĐHQG HCM % Your institution for the title page
+    Trường Đại học Khoa học Tự nhiên - ĐHQG HCM
 }
-\date{\today} % Date, can be changed to a custom date
+\date{\today}
 
 \begin{document}
 
 \begin{frame}
-    % Print the title page as the first slide
     \titlepage
 \end{frame}
 
 \begin{frame}{Nội dung}
-    % Throughout your presentation, if you choose to use \section{} and \subsection{} commands, these will automatically be printed on this slide as an overview of your presentation
     \tableofcontents
 \end{frame}
 
 \section{Giới thiệu}
+
+\begin{frame}
+	\Huge{\centerline{\textbf{Giới thiệu}}}
+\end{frame}
+
 
 \begin{frame}{Giới thiệu}
 \begin{alertblock}{Nghe có vẻ \textbf{thật}, nhưng đây là \textbf{fake news}}
@@ -53,6 +82,11 @@
 \end{frame}
 
 \section{Fakenews Detection}
+
+\begin{frame}
+	\Huge{\centerline{\textbf{Data}}}
+\end{frame}
+
 \subsection{Data}
 \begin{frame}{Data}
 Dataset gồm 44898 bài báo được thu thập trong năm 2017. \href{https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset}{Link dataset trên Kaggle}
@@ -61,8 +95,13 @@ Dataset gồm 44898 bài báo được thu thập trong năm 2017. \href{https:/
 \end{figure}
 \end{frame}
 
-\begin{frame}{Preprocessing}
+
+\begin{frame}
+	\Huge{\centerline{\textbf{Preprocessing}}}
+\end{frame}
+
 \subsection{Preprocessing}
+\begin{frame}{Preprocessing}
 \begin{itemize}
 \item Ta cần chỉnh sửa cấu trúc dataset:
 \begin{itemize}
@@ -97,18 +136,22 @@ Dataset gồm 44898 bài báo được thu thập trong năm 2017. \href{https:/
 \end{frame}
 
 \begin{frame}{Preprocessing (cont.)}
-\begin{columns}[c] % The "c" option specifies centered vertical alignment while the "t" option is used for top vertical alignment
+\begin{columns}[c]
 
-\column{.4\textwidth} % Left column and width
+\column{.4\textwidth}
 \begin{block}{Trước}
 LONDON (Reuters) - Abdul Daoud spilt most of the cappuccino into the saucer the first time he served Princess Diana, his nerves getting the better of him. Almost 20 years on since she was killed when her car crashed in a Paris tunnel, he still works surrounded by pictures of the woman he calls "the princess of the people" in his cafe, named Diana, his very personal attempt to keep her memory alive.
 \end{block}
 \pause
-\column{.4\textwidth} % Right column and width
+\column{.4\textwidth}
 \begin{block}{Sau}
 london  reuters    abdul daoud spilt most of the cappuccino into the saucer the first time he served princess diana  his nerves getting the better of him  almost  years on since she was killed when her car crashed in a paris tunnel  he still works surrounded by pictures of the woman he calls  the princess of the people  in his cafe  named diana  his very personal attempt to keep her memory alive 
 \end{block}
 \end{columns}
+\end{frame}
+
+\begin{frame}
+	\Huge{\centerline{\textbf{Feature Extraction}}}
 \end{frame}
 
 \begin{frame}{Feature Extraction}
@@ -132,20 +175,41 @@ Với $N$ là tổng số document, $df(t)$ là số lượng document chứa te
 \end{frame}
 
 \subsection{Decision Tree}
-\begin{frame}{Decision Tree (cây quyết định)}
+
+\begin{frame}
+	\Huge{\centerline{\textbf{Decision Tree (Cây Quyết định)}}}
+\end{frame}
+
+\begin{frame}{Decision Tree}
 Nhắc lại:
 \begin{itemize}
-\item Là phương pháp xuất hiện từ rất sớm và rất thành công trong nhiều lĩnh vực của text classification.
-\item Có nhiều phiên bản: ID3, ID4.5, ID5.0, CART\footnote{Decision Tree của sklearn sử dụng phiên bản customize của thuật CART}
-\item Ý tưởng: tạo một cấu trúc dữ liệu cây, mỗi nút là một thuộc tính của tập dữ liệu đã phân lớp.
-\begin{itemize}
-\item Q: Làm sao biết thuộc tính nào là nút cha, thuộc tính nào là nút con?
-\item A: Feature Selection
-\end{itemize}
+\item Được Ross Quinlan sáng tạo năm 1986\cite{DBLP:journals/ml/Quinlan86}, là phương pháp xuất hiện từ rất sớm và rất thành công trong nhiều lĩnh vực của text classification.
+\item Có nhiều phiên bản: ID3, ID4.5, ID5.0, CART\footnote{sklearn.tree.DecisionTreeClassifier sử dụng phiên bản customize của thuật CART}
+\item Ý tưởng: tạo một cấu trúc dữ liệu cây, mỗi nút lá là một thuộc tính của tập dữ liệu đã phân lớp; mỗi nút không phải nút lá biểu thị một phép thử với một thuộc tính; mỗi nhánh biểu thị kết quả của phép thử.
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Decision Tree (cont.) - Feature Selection}
+\begin{frame}{Decision Tree (cont.) - Ví dụ}
+\centering{
+\begin{forest}
+[Hết kem đánh răng?, tikz={\draw[{Latex}-, thick] (.north) --++ (0,1);}
+	[Trời mưa?,edge label={node[midway,left] {\small{Hết}}} 
+		[Ở nhà, edge label={node[midway,left] {\small{Đang mưa}}}]
+		[Đi mua, edge label={node[midway,right] {\small{Không mưa}}}] 
+	]
+	[Ở nhà, edge label={node[midway,right] {\small{Chưa hết}}}
+	]   
+] 
+\end{forest}
+}
+
+\begin{itemize}
+	\item Q: Làm sao biết thuộc tính nào là nút cha, thuộc tính nào là nút con?
+	\item A: Feature Selection, có thể sử dụng độ đo Information Gains (IG) hoặc Gini Index.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Decision Tree (cont.) - Feature Selection with IG}
 \begin{itemize}
 \item Hàm số Entropy:
 $$
@@ -162,7 +226,7 @@ $$
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Decision Tree (cont.) - Feature Selection}
+\begin{frame}{Decision Tree (cont.) - Feature Selection with IG}
 \begin{itemize}
 \item Chọn thuộc tính $A$ có $k$ giá trị khác nhau, chia tập train $E$ thành các tập con $\{E_1, E_2, .., E_k\}$. \textbf{Entropy kỳ vọng (EH)} còn lại sau khi chọn $A$ là một nút:
 $$
@@ -185,6 +249,11 @@ Ta sẽ chọn thuộc tính có Information Gain lớn nhất làm nút cha.
 \end{frame}
 
 \subsection{Training \& testing}
+
+\begin{frame}
+	\Huge{\centerline{\textbf{Training \& Testing}}}
+\end{frame}
+
 \begin{frame}{Training \& testing}
 \begin{figure}
 \includegraphics[width=0.35\linewidth]{img/real-fake-in-train.png}
@@ -244,17 +313,19 @@ Khuyết điểm:
 \begin{itemize}
 \item Dễ bị overfit. Xử lý: pruning.
 \item `Nhạy cảm` với sự xáo trộn dữ liệu.\cite{Kowsari_2019}
+\begin{itemize}
+	\item "Thử" xài nltk.stop\_word thay cho english stopwords của TfidfVectorizer?
+\end{itemize}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{QnA}
+\begin{frame}
     \Huge{\centerline{\textbf{QnA}}}
 \end{frame}
 
 \section{Tài liệu}
 
 \begin{frame}{Tài liệu}
-    % Beamer does not support BibTeX so references must be inserted manually as below
     \printbibliography
 \end{frame}
 
