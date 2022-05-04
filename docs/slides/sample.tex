@@ -36,7 +36,7 @@
 \addbibresource{sample.bib}
 
 \title[Fakenews Detection]{Ứng dụng Decision Tree xây dựng \\ công cụ Fakenews Detection}
-\subtitle{Đồ án môn học Xử lý ngôn ngữ tự nhiên ứng dụng (CSC15008)}
+\subtitle{Đồ án môn học Xử lí ngôn ngữ tự nhiên ứng dụng (CSC15008)}
 
 \author[Quan-Tran] {Trần Hoàng Quân - Lê Hoàng Trọng Tín}
 
@@ -98,6 +98,7 @@ Dataset gồm 44898 bài báo được thu thập trong năm 2017. \href{https:/
 
 \begin{frame}
 	\Huge{\centerline{\textbf{Preprocessing}}}
+	\centerline{(Tiền xử lí)}
 \end{frame}
 
 \subsection{Preprocessing}
@@ -108,7 +109,7 @@ Dataset gồm 44898 bài báo được thu thập trong năm 2017. \href{https:/
 \item Loại bỏ các cột \texttt{title}, \texttt{subject} và \texttt{date}. Tạm thời ta không cần những cột này.
 \item Thêm cột \texttt{class} để gán nhãn tin thật / tin giả.
 \end{itemize}
-\item Bước tiền xử lý:
+\item Bước tiền xử lí:
 \begin{itemize}
 \item Loại bỏ dấu câu
 \item Chuyển câu về dạng chữ thường
@@ -152,6 +153,7 @@ london  reuters    abdul daoud spilt most of the cappuccino into the saucer the 
 
 \begin{frame}
 	\Huge{\centerline{\textbf{Feature Extraction}}}
+	\centerline{(Trích xuất đặc trưng)}
 \end{frame}
 
 \begin{frame}{Feature Extraction}
@@ -177,19 +179,23 @@ Với $N$ là tổng số document, $df(t)$ là số lượng document chứa te
 \subsection{Decision Tree}
 
 \begin{frame}
-	\Huge{\centerline{\textbf{Decision Tree (Cây Quyết định)}}}
+	\Huge{\centerline{\textbf{Decision Tree}}}
+	{\centerline{(Cây Quyết định)}}
 \end{frame}
 
 \begin{frame}{Decision Tree}
 Nhắc lại:
 \begin{itemize}
 \item Được Ross Quinlan sáng tạo năm 1986\cite{DBLP:journals/ml/Quinlan86}, là phương pháp xuất hiện từ rất sớm và rất thành công trong nhiều lĩnh vực của text classification.
-\item Có nhiều phiên bản: ID3, ID4.5, ID5.0, CART\footnote{sklearn.tree.DecisionTreeClassifier sử dụng phiên bản customize của thuật CART}
+\item Có nhiều phiên bản: ID3, ID4.5, ID5.0, CART\footnote{sklearn.tree.DecisionTreeClassifier sử dụng phiên bản customize của thuật CART\cite{scikit-learn}}
 \item Ý tưởng: tạo một cấu trúc dữ liệu cây, mỗi nút lá là một thuộc tính của tập dữ liệu đã phân lớp; mỗi nút không phải nút lá biểu thị một phép thử với một thuộc tính; mỗi nhánh biểu thị kết quả của phép thử.
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Decision Tree (cont.) - Ví dụ}
+\begin{figure}[H]
+\begin{columns}[c]
+\column{.4\textwidth}
 \centering{
 \begin{forest}
 [Hết kem đánh răng?, tikz={\draw[{Latex}-, thick] (.north) --++ (0,1);}
@@ -199,9 +205,25 @@ Nhắc lại:
 	]
 	[Ở nhà, edge label={node[midway,right] {\small{Chưa hết}}}
 	]   
-] 
+]
 \end{forest}
 }
+\column{.6\textwidth}
+\begin{table}
+\begin{tabular}{|l|l|l|}
+	\hline
+	Hết kem đánh răng & Trời mưa & Quyết định \\
+	\hline
+	Có & Có & Ở nhà \\
+	Có & Không & Đi mua \\
+	Không & Có & Ở nhà \\
+	Không & Không & Ở nhà \\
+	\hline
+\end{tabular}
+\end{table}
+\end{columns}
+\caption{Ví dụ một cây quyết định và Các thuộc tính của tập dữ liệu phân lớp}
+\end{figure}
 
 \begin{itemize}
 	\item Q: Làm sao biết thuộc tính nào là nút cha, thuộc tính nào là nút con?
@@ -298,8 +320,9 @@ Nhận xét:
 \end{frame}
 
 \section{Demo}
-\begin{frame}{Demo}
-    \Huge{\centerline{\textbf{Xem demo trực tiếp..}}}
+\begin{frame}
+    \Huge{\centerline{\textbf{Demo}}}
+    \centerline{Xem demo trực tiếp..}
 \end{frame}
 
 \begin{frame}{Tổng kết}
@@ -311,7 +334,7 @@ Nhận xét:
 \end{itemize}
 Khuyết điểm:
 \begin{itemize}
-\item Dễ bị overfit. Xử lý: pruning.
+\item Dễ bị overfit. Xử lí: pruning.
 \item `Nhạy cảm` với sự xáo trộn dữ liệu.\cite{Kowsari_2019}
 \begin{itemize}
 	\item "Thử" xài nltk.stop\_word thay cho english stopwords của TfidfVectorizer?
@@ -319,14 +342,14 @@ Khuyết điểm:
 \end{itemize}
 \end{frame}
 
-\begin{frame}
-    \Huge{\centerline{\textbf{QnA}}}
-\end{frame}
-
 \section{Tài liệu}
 
 \begin{frame}{Tài liệu}
-    \printbibliography
+	\printbibliography
+\end{frame}
+
+\begin{frame}
+    \Huge{\centerline{\textbf{QnA}}}
 \end{frame}
 
 \begin{frame}

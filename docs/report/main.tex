@@ -9,7 +9,36 @@
 \usepackage{url}
 \usepackage[top=.75in, left=.5in, right=.5in, bottom=1in]{geometry}
 \usepackage{parskip}
+\usepackage{tabularx}
 \usepackage[utf8]{vietnam}
+\usepackage{multicol}
+\usepackage{tikz, forest}
+
+\usetikzlibrary{arrows.meta, shapes}
+\forestset{
+	.style={
+		for tree={
+			base=bottom,
+			child anchor=north,
+			s sep+=1cm,
+			straight edge/.style={
+				edge path={\noexpand\path[\forestoption{edge},thick,-{Latex}] 
+					(!u.parent anchor) -- (.child anchor);}
+			},
+			if n children={0}
+			{tier=word, draw, thick, rectangle}
+			{draw, diamond, thick, aspect=2},
+			if n=1{%
+				edge path={\noexpand\path[\forestoption{edge},thick,-{Latex}] 
+					(!u.parent anchor) -| (.child anchor) node[pos=.2, above] {Y};}
+			}{
+				edge path={\noexpand\path[\forestoption{edge},thick,-{Latex}] 
+					(!u.parent anchor) -| (.child anchor) node[pos=.2, above] {N};}
+			}
+		}
+	}
+}
+
 \setlength{\headheight}{29.43912pt}
 
 % \graphicspath{PATH_TO_GRAPHIC_FOLDER}
@@ -99,9 +128,37 @@ $$
 Với $N$ là tổng số document, $df(t)$ là tổng số lượng document chứa term $t$, $TF(d, t)$ là số lần xuất hiện của từ $t$ trong document $d$.
 
 \subsection{Cây quyết định (Decision Tree)}
-Thuật toán phân lớp sử dụng Cây quyết định (Decision Tree) được Ross Quinlann phát minh năm 1986\cite{DBLP:journals/ml/Quinlan86}, là phương pháp xuất hiện từ rất sớm và rất thành công trong nhiều lĩnh vực của Học máy nói riêng và Text Classification nói chung. Từ 1986 đến nay đã có các phiên bản ID3, ID4.5, ID5.0, CART.\footnote{Phiên bản \texttt{sklearn.tree.DecisionTreeClassifier} sử dụng phiên bản customise của thuật toán CART.} 
+Thuật toán phân lớp sử dụng Cây quyết định (Decision Tree) được Ross Quinlann phát minh năm 1986\cite{DBLP:journals/ml/Quinlan86}, là phương pháp xuất hiện từ rất sớm và rất thành công trong nhiều lĩnh vực của Học máy nói riêng và Text Classification nói chung. Từ 1986 đến nay đã có các phiên bản ID3, ID4.5, ID5.0, CART.\footnote{Phiên bản \texttt{sklearn.tree.DecisionTreeClassifier} sử dụng phiên bản customise của thuật toán CART.\cite{scikit-learn}}
 
-Ý tưởng của thuật toán là tạo một cấu trúc dữ liệu cây, mỗi nút là một thuộc tính của tập dữ liệu đã phân lớp. Để xác định đâu là nút cha, đâu là nút con, thuật toán tiến hành lựa chọn các đặc trưng (Feature Selection) dựa trên các độ đo \textbf{Information Gains} và \textbf{Gini Index}.
+Ý tưởng của thuật toán là tạo một cấu trúc dữ liệu cây, mỗi nút là một thuộc tính của tập dữ liệu đã phân lớp. Ví dụ một cây quyết định và tập dữ liệu phân lớp:
+\begin{figure}[H]
+\begin{multicols}{2}
+	\begin{forest}
+		[Hết kem đánh răng?, tikz={\draw[{Latex}-, thick] (.north) --++ (0,1);}
+		[Trời mưa?,edge label={node[midway,left] {\small{Hết}}} 
+		[Ở nhà, edge label={node[midway,left] {\small{Đang mưa}}}]
+		[Đi mua, edge label={node[midway,right] {\small{Không mưa}}}] 
+		]
+		[Ở nhà, edge label={node[midway,right] {\small{Chưa hết}}}
+		]   
+		]
+	\end{forest}
+
+	\begin{tabular}{|l|l|l|}
+		\hline
+		Hết kem đánh răng & Trời mưa & Quyết định \\
+		\hline
+		Có & Có & Ở nhà \\
+		Có & Không & Đi mua \\
+		Không & Có & Ở nhà \\
+		Không & Không & Ở nhà \\
+		\hline
+	\end{tabular}
+\end{multicols}
+\caption{Ví dụ một cây quyết định và tập dữ liệu phân lớp}
+\end{figure}
+Để xác định đâu là nút cha, đâu là nút con, thuật toán tiến hành lựa chọn các đặc trưng (Feature Selection) dựa trên các độ đo \textbf{Information Gains} và \textbf{Gini Index}.
+
 \subsubsection{Lựa chọn đặc trưng (Feature Selection) với độ đo Information Gains}
 Gọi $\mathbf{p} = (p_1, p_2, .., p_n)$ là phân phối sao cho biến ngẫu nhiên $x$ nhận $n$ giá trị $(x_1, x_2, .., x_n)$ và xác suất lần lượt là $(p_1, p_2, .., p_n)$. Hàm số Entropy $H(\mathbf{p})$ được định nghĩa như sau:
 $$
@@ -120,6 +177,7 @@ $$
 A(I) = H\left(\frac{p}{n + p}, \frac{n}{n + p}\right) - EH(A) 
 $$
 Ta sẽ chọn thuộc tính nào có Information Gains lớn nhất làm nút cha. Các thuộc tính có Entropy = 0 mặc nhiên sẽ là nút lá.
+
 \subsubsection{Lựa chọn đặc trưng (Feature Selection) với độ đo Gini Index}
 
 
@@ -127,6 +185,18 @@ Ta sẽ chọn thuộc tính nào có Information Gains lớn nhất làm nút c
 
 
 \section{Tổng kết}
+Một số ưu điểm của thuật toán Decision Tree có thể kể đến:
+\begin{itemize}
+\item Là thuật toán phổ biến, dễ cài đặt.
+\item Cho độ chính xác cao với tập dữ liệu nhỏ.
+\item Thời gian huấn luyện tương đối nhanh.
+\end{itemize}
+Tuy nhiên, đi kèm là một số khuyết điểm:
+\begin{itemize}
+\item Dễ bị overfit, có thể khắc phục bằng phương pháp cắt tỉa thu gọn tập luật.
+\item Xáo trộn dữ liệu có thể dẫn đến kết quả bị sai khác.\cite{Kowsari_2019}
+\end{itemize}
+
 
 \cleardoublepage
 \phantomsection
