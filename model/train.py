@@ -99,7 +99,10 @@ class Train:
         self.__dump(sgd_model, 'sgd_classifier')
 
     def __train_decision_tree(self):
-        decision_model = DecisionTreeClassifier(random_state = self.__random_state)
+        decision_model = DecisionTreeClassifier(
+            random_state = self.__random_state,
+            criterion = 'entropy'
+        )
         decision_model.fit(self.__X_train, self.__y_train)
 
         print('Decision Tree model score:', decision_model.score(self.__X_test, self.__y_test))
@@ -121,7 +124,10 @@ class Train:
         self.__dump(gradient_model, 'gradient_boosting')
 
     def __train_random_forest(self):
-        forest_model = RandomForestClassifier(random_state = self.__random_state)
+        forest_model = RandomForestClassifier(
+            random_state = self.__random_state,
+            criterion = 'entropy'
+        )
         forest_model.fit(self.__X_train, self.__y_train)
 
         print('Random Forest Classifier model score', forest_model.score(self.__X_test, self.__y_test))
