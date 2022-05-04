@@ -110,12 +110,6 @@ Dựa trên mô hình Cây quyết định (Decision Tree) và một số mô h�
 \section{Quá trình xây dựng công cụ}
 \subsection{Dữ liệu}
 Dữ liệu gồm 44898 bài báo, trích từ các nền tảng nổi tiếng trong năm 2017. \href{https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset}{Đường link đến dataset}.
-\begin{figure}[H]
-    \centering
-    \includegraphics[scale=.5]{img/real-fake-in-train.png}
-    \caption{Tương quan các lớp fake (0) và real (1)}
-    \label{fig:real_fake_in_train}
-\end{figure}
 
 \subsection{Tiền xử lý (Preprocessing)}
 Các bước tiền xử lí bao gồm:
@@ -125,7 +119,14 @@ Các bước tiền xử lí bao gồm:
 \item Loại bỏ số, vì số liệu thường gây "nhiễu" trong quá trình phân loại.
 \item Loại bỏ hyperlinks, html tags và các kí tự đặc biệt.
 \item Loại bỏ stopwords, trong trường hợp này là stopwords tiếng Anh.
+\item Thêm class để nhận biết tin thật và tin giả.
 \end{itemize}
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=.8]{img/data-summerise.png}
+    \caption{Tương quan các lớp fake (0) và real (1) trong dataset}
+    \label{fig:real_fake_in_train}
+\end{figure}
 
 \subsection{Trích xuất đặc trưng (Feature Extraction) với TF-IDF}
 Ta không tiến hành "học thuộc" một câu, mà chỉ học các đặc trưng của câu đó. Có nhiều phương pháp trích xuất đặc trưng: Bag of Words (BoW), TF-IDF, GloVe, Word2Vec, ..etc.
