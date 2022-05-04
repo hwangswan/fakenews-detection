@@ -187,16 +187,16 @@ Với $N$ là tổng số document, $df(t)$ là số lượng document chứa te
 Nhắc lại:
 \begin{itemize}
 \item Được Ross Quinlan sáng tạo năm 1986\cite{DBLP:journals/ml/Quinlan86}, là phương pháp xuất hiện từ rất sớm và rất thành công trong nhiều lĩnh vực của text classification.
-\item Có nhiều phiên bản: ID3, ID4.5, ID5.0, CART\footnote{sklearn.tree.DecisionTreeClassifier sử dụng phiên bản customize của thuật CART}
+\item Có nhiều phiên bản: ID3, ID4.5, ID5.0, CART\footnote{sklearn.tree.DecisionTreeClassifier sử dụng phiên bản customize của thuật CART\cite{scikit-learn}}
 \item Ý tưởng: tạo một cấu trúc dữ liệu cây, mỗi nút lá là một thuộc tính của tập dữ liệu đã phân lớp; mỗi nút không phải nút lá biểu thị một phép thử với một thuộc tính; mỗi nhánh biểu thị kết quả của phép thử.
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Decision Tree (cont.) - Ví dụ}
+\begin{figure}[H]
 \begin{columns}[c]
 \column{.4\textwidth}
 \centering{
-\begin{figure}[H]
 \begin{forest}
 [Hết kem đánh răng?, tikz={\draw[{Latex}-, thick] (.north) --++ (0,1);}
 	[Trời mưa?,edge label={node[midway,left] {\small{Hết}}} 
@@ -207,8 +207,6 @@ Nhắc lại:
 	]   
 ]
 \end{forest}
-\caption{Ví dụ một cây quyết định}
-\end{figure}
 }
 \column{.6\textwidth}
 \begin{table}
@@ -222,9 +220,10 @@ Nhắc lại:
 	Không & Không & Ở nhà \\
 	\hline
 \end{tabular}
-\caption{Các thuộc tính của tập dữ liệu ví dụ}
 \end{table}
 \end{columns}
+\caption{Ví dụ một cây quyết định và Các thuộc tính của tập dữ liệu phân lớp}
+\end{figure}
 
 \begin{itemize}
 	\item Q: Làm sao biết thuộc tính nào là nút cha, thuộc tính nào là nút con?
@@ -321,8 +320,9 @@ Nhận xét:
 \end{frame}
 
 \section{Demo}
-\begin{frame}{Demo}
-    \Huge{\centerline{\textbf{Xem demo trực tiếp..}}}
+\begin{frame}
+    \Huge{\centerline{\textbf{Demo}}}
+    \centerline{Xem demo trực tiếp..}
 \end{frame}
 
 \begin{frame}{Tổng kết}
