@@ -104,9 +104,19 @@ Thầy Nguyễn Hồng Bửu Long
 \pagebreak
 
 \section{Giới thiệu đề tài}
-Tin giả (fake news) đã trở thành mối quan tâm trong những năm gần đây.
+Tin giả (fake news) đã trở thành mối quan tâm trong những năm gần đây. Nhiều hệ thống phân loại tin giả đã được xây dựng và hoạt động rất tốt, dựa trên các mô hình học máy phổ biến.
 
+Dựa trên mô hình Cây quyết định (Decision Tree) và một số mô hình học máy khác, nhóm tạo ra một công cụ phân loại tin giả, cho kết quả chính xác ở mức chấp nhận được. Dù kết hợp nhiều mô hình học máy nhưng trọng tâm của nhóm sẽ tìm hiểu, nghiên cứu và phát triển xoay quanh mô hinh Cây quyết định.
 \section{Quá trình xây dựng công cụ}
+\subsection{Dữ liệu}
+Dữ liệu gồm 44898 bài báo, trích từ các nền tảng nổi tiếng trong năm 2017. \href{https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset}{Đường link đến dataset}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=.5]{img/real-fake-in-train.png}
+    \caption{Tương quan các lớp fake (0) và real (1)}
+    \label{fig:real_fake_in_train}
+\end{figure}
+
 \subsection{Tiền xử lý (Preprocessing)}
 Các bước tiền xử lí bao gồm:
 \begin{itemize}
@@ -179,11 +189,42 @@ $$
 Ta sẽ chọn thuộc tính nào có Information Gains lớn nhất làm nút cha. Các thuộc tính có Entropy = 0 mặc nhiên sẽ là nút lá.
 
 \subsubsection{Lựa chọn đặc trưng (Feature Selection) với độ đo Gini Index}
-
+Gini Index được tính toán như sau:
+$$
+\text{Gini} = 1 - \sum_{i = 1}^n p_i ^ 2
+$$
+Vẫn như Entropy, ta chọn thuộc tính có Gini Index nhỏ nhất làm nút cha, sau đó tính toán Gini Index với các nút còn lại.
 
 \section{Huấn luyện và Kiểm thử}
-
-
+Tiến hành huấn luyện với các thông số sau:
+\begin{itemize}
+\item Kích thước training dataset: 44798 articles, đã gán nhãn.
+\item Kích thước testing dataset: 100 articles, đã gán nhãn. Đây là 50 article chọn ngẫu nhiên từ tập True \& 50 article chọn ngẫu nhiên từ tập Fake.
+\end{itemize}
+\begin{multicols}{2}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.5]{img/train-result.png}
+\caption{Heatmap kết quả testing}
+\label{fig:heatmap_testing}
+\end{figure}
+\begin{table}[H]
+\centering
+\begin{tabular}{l l l l l}
+\hline
+ & precision & recall & f1-score & support \\
+\hline
+0 & 1.00 & 1.00 & 1.00 & 50 \\
+1 & 1.00 & 1.00 & 1.00 & 50 \\
+accuracy &   &   & 1.00 & 100 \\
+macro avg & 1.00 & 1.00 & 1.00 & 100 \\
+weighted avg & 1.00 & 1.00 & 1.00 & 100 \\
+\hline
+\end{tabular}
+\caption{\texttt{classification\_report} sau khi train}
+\end{table}
+\end{multicols}
+Như có thể thấy, độ chính xác của mô hình là gần như tuyệt đối (1.00).
 \section{Tổng kết}
 Một số ưu điểm của thuật toán Decision Tree có thể kể đến:
 \begin{itemize}
