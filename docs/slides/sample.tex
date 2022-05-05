@@ -5,31 +5,35 @@
 \usepackage{hyperref}
 \usepackage{graphicx}
 \usepackage{booktabs}
-\usepackage{tikz, forest}
+\usepackage{tikz}
 
-\usetikzlibrary{arrows.meta, shapes}
-\forestset{
-	.style={
-		for tree={
-			base=bottom,
-			child anchor=north,
-			s sep+=1cm,
-			straight edge/.style={
-				edge path={\noexpand\path[\forestoption{edge},thick,-{Latex}] 
-					(!u.parent anchor) -- (.child anchor);}
-			},
-			if n children={0}
-			{tier=word, draw, thick, rectangle}
-			{draw, diamond, thick, aspect=2},
-			if n=1{%
-				edge path={\noexpand\path[\forestoption{edge},thick,-{Latex}] 
-					(!u.parent anchor) -| (.child anchor) node[pos=.2, above] {Y};}
-			}{
-				edge path={\noexpand\path[\forestoption{edge},thick,-{Latex}] 
-					(!u.parent anchor) -| (.child anchor) node[pos=.2, above] {N};}
-			}
-		}
-	}
+\usetikzlibrary{arrows,shapes}
+\tikzset{
+    every node/.style={
+        font=\scriptsize
+    },
+    decision/.style={
+        shape=rectangle,
+        minimum height=1cm,
+        text width=2cm,
+        text centered,
+        rounded corners=1ex,
+        draw,
+        label={[yshift=0.125cm]left:yes},
+        label={[yshift=0.125cm]right:no},
+    },
+    outcome/.style={
+        shape=ellipse,
+        fill=gray!15,
+        draw,
+        text width=1.5cm,
+        text centered
+    },
+    decision tree/.style={
+        edge from parent path={[-latex] (\tikzparentnode) -| (\tikzchildnode)},
+        sibling distance=3cm,
+        level distance=1.125cm
+    },
 }
 
 \usepackage[backend=biber]{biblatex}
@@ -196,18 +200,15 @@ Nhắc lại:
 \begin{figure}[H]
 \begin{columns}[c]
 \column{.4\textwidth}
-\centering{
-\begin{forest}
-[Hết kem đánh răng?, tikz={\draw[{Latex}-, thick] (.north) --++ (0,1);}
-	[Trời mưa?,edge label={node[midway,left] {\small{Hết}}} 
-		[Ở nhà, edge label={node[midway,left] {\small{Đang mưa}}}]
-		[Đi mua, edge label={node[midway,right] {\small{Không mưa}}}] 
-	]
-	[Ở nhà, edge label={node[midway,right] {\small{Chưa hết}}}
-	]   
-]
-\end{forest}
+\begin{tikzpicture}
+\node [decision] { Hết kem đánh răng? }
+[decision tree]
+child { node [decision] { Trời đang mưa? }
+    child { node [outcome] { Ở nhà } }
+    child { node [outcome] { Đi mua } }
 }
+child { node [outcome] { Ở nhà } };
+\end{tikzpicture}
 \column{.6\textwidth}
 \begin{table}
 \begin{tabular}{|l|l|l|}
