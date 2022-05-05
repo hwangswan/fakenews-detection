@@ -14,13 +14,13 @@ Fake and real news dataset (Kaggle): https://www.kaggle.com/datasets/clmentbisai
     ```
     pip install -r requirements.txt
     ```
-- Clean data: Đọc kỹ hướng dẫn trong file `model/data-cleaning.ipynb`, sau đó chạy notebook hoặc chạy file `model/clean.py`:
+- Clean data: Đọc kỹ hướng dẫn trong file `model/notebooks/data-cleaning.ipynb`, sau đó chạy notebook hoặc chạy file `model/clean.py`:
     ```
     cd model
     python clean.py
     ```
 
-- Đọc file `model/model-training.ipynb`, sau đó chạy notebook hoặc chạy file `model/train.py`:
+- Đọc file `model/notebooks/model-training.ipynb`, sau đó chạy notebook hoặc chạy file `model/train.py`:
     ```
     cd model
     python train.py
@@ -35,9 +35,10 @@ bash migrate.sh
 ```
 
 ## Demo prediction
+Cú pháp:
 ```
 cd model
-python demo.py --input=<input_file> --classifier=<classifier_name>
+python predict.py --input=<input_file> --classifier=<classifier_name>
 ```
 
 - `<input_file>` gồm nhiều dòng, mỗi dòng là 1 article cần đánh giá True/Fake.
@@ -54,11 +55,11 @@ python demo.py --input=<input_file> --classifier=<classifier_name>
 |`naive_bayes`|Naive Bayes|
 |`linear_svc`|Linear SVC|
 
-- Predictions với tất cả các classifiers hiện có:
-    ```
-    cd demo
-    python demo.py --input=<input_file> --all
-    ```
+Predict với tất cả các classifiers hiện có:
+```
+cd model
+python predict.py --input=<input_file> --all
+```
 
 ## Tech used
 - Flask

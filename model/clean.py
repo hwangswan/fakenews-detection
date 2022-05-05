@@ -3,10 +3,15 @@ import sys
 
 __RANDOM_STATE__ = 42
 
+__TRUE_CSV__ = 'dataset/True.csv'
+__FAKE_CSV__ = 'dataset/Fake.csv'
+__TRAIN_CSV__ = 'dataset/train.csv'
+__TEST_CSV__ = 'dataset/test.csv'
+
 def clean():
     try:
-        fake_df = pd.read_csv('dataset/Fake.csv')
-        true_df = pd.read_csv('dataset/True.csv')
+        fake_df = pd.read_csv(__FAKE_CSV__)
+        true_df = pd.read_csv(__TRUE_CSV__)
     except FileNotFoundError:
         print('Cannot find dataset')
         sys.exit(2)
@@ -33,8 +38,8 @@ def clean():
     test_df = test_df.sample(frac = 1, random_state = __RANDOM_STATE__).reset_index(drop = True)
 
     # Save to csv
-    train_df.to_csv('dataset/train.csv')
-    test_df.to_csv('dataset/test.csv')
+    train_df.to_csv(__TRAIN_CSV__)
+    test_df.to_csv(__TEST_CSV__)
 
 if __name__ == '__main__':
     clean()
