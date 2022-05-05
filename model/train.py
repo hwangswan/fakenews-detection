@@ -9,7 +9,7 @@ from sklearn.metrics import classification_report
 
 import pandas as pd
 import pickle as pkl
-import re, string, os
+import re, string, os, sys
 
 __MODEL_DIR__ = 'model/'
 __TRAIN_CSV__ = 'dataset/train.csv'
@@ -22,32 +22,32 @@ class Train:
 
         self.__random_state = random_state
     
+        X_train, y_train, X_test, y_test = self.__dataloader()
+        self.__y_train, self.__y_test = y_train, y_test
+
+        # Create vectorizer
+        self.__create_tfidf_vectorizer(X_train, X_test)
+    
+    def __dataloader(self):
         try:
             df_train = pd.read_csv(__TRAIN_CSV__)
             df_test = pd.read_csv(__TEST_CSV__)
         except FileNotFoundError:
-            print('Dataset not found, try running dataclean.py')
+            print('Dataset not found, try running clean.py')
+            sys.exit(2)
 
         # Preprocess data    
         df_train['text'].apply(Train.preprocess)
         df_test['text'].apply(Train.preprocess)
 
         self.__model_dir = __MODEL_DIR__
-        X_train, self.__y_train = df_train['text'], df_train['class']
-        X_test, self.__y_test = df_test['text'], df_test['class']
+        X_train, y_train = df_train['text'], df_train['class']
+        X_test, y_test = df_test['text'], df_test['class']
 
         print('Finished reading dataset')
 
-        # Create vectorizer
-        self.__vectorizer = TfidfVectorizer(
-            stop_words = 'english',
-        )
+        return X_train, y_train, X_test, y_test
 
-        self.__X_train = self.__vectorizer.fit_transform(X_train)
-        self.__X_test = self.__vectorizer.transform(X_test)
-
-        self.__dump(self.__vectorizer, 'vectorizer')
-    
     def __dump(self, variable, filename : str):
         '''Dump a variable to pickle file.
         '''
@@ -78,6 +78,18 @@ class Train:
         text = re.sub('\w*\d\w*', '', text)
         
         return text
+    
+    def __create_tfidf_vectorizer(self, X_train, X_test):
+        self.__vectorizer = TfidfVectorizer(
+            stop_words = 'english',
+        )
+
+        self.__X_train = self.__vectorizer.fit_transform(X_train)
+        self.__X_test = self.__vectorizer.transform(X_test)
+
+        print('TfidfVectorizer params:', self.__vectorizer.get_params())
+
+        self.__dump(self.__vectorizer, 'vectorizer')
 
     def __train_logistic_regression(self):
         logistic_model = LogisticRegression()

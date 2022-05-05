@@ -7,7 +7,9 @@ VNUHCM - University of Science, mùa Xuân 2022
 Đối với bài toán Text Classification, nhóm xây dựng ứng dụng phát hiện tin giả (Fakenews Detection), sử dụng một số mô hình máy học để đưa ra dự đoán một mẩu tin là thật (true) hay giả (fake).
 
 ## Dataset
-Fake and real news dataset (Kaggle): https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset
+Fake and real news dataset (Kaggle): https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset.
+
+Download dataset và giải nén vào folder `model/dataset`.
 
 ## Model generation
 - Cài các package cần thiết:
