@@ -20,6 +20,9 @@ cd model
 demo.py --input=<input_file> --classifier=<classifier_name>
 ```
 
+- `<input_file>` gồm nhiều dòng, mỗi dòng là 1 article cần đánh giá True/Fake.
+- `classifier_name` nằm trong list sau:
+
 |classifer_name|Classifier Name|
 |--------------|---------------|
 |`logistic_regression`|Logistic Regression|

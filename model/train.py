@@ -22,8 +22,11 @@ class Train:
 
         self.__random_state = random_state
     
-        df_train = pd.read_csv(__TRAIN_CSV__)
-        df_test = pd.read_csv(__TEST_CSV__)
+        try:
+            df_train = pd.read_csv(__TRAIN_CSV__)
+            df_test = pd.read_csv(__TEST_CSV__)
+        except FileNotFoundError:
+            print('Dataset not found, try running dataclean.py')
 
         # Preprocess data    
         df_train['text'].apply(Train.preprocess)

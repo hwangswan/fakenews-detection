@@ -1,10 +1,15 @@
 import pandas as pd
+import sys
 
 __RANDOM_STATE__ = 42
 
 def clean():
-    fake_df = pd.read_csv('dataset/Fake.csv')
-    true_df = pd.read_csv('dataset/True.csv')
+    try:
+        fake_df = pd.read_csv('dataset/Fake.csv')
+        true_df = pd.read_csv('dataset/True.csv')
+    except FileNotFoundError:
+        print('Cannot find dataset')
+        sys.exit(2)
 
     # Add labels
     fake_df['class'] = 0

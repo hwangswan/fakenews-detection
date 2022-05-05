@@ -27,13 +27,16 @@ def main(argv):
         print('No classifier specified.')
         sys.exit(2)
 
-    p = Pipeline()
+    try:
+        p = Pipeline()
 
-    with open(input_file, 'r+') as f:
-        if not all_classifier:
-            print(p.predict(classifier, f.readlines()))
-        else:
-            print(p.predict_all(f.readlines()))
+        with open(input_file, 'r+') as f:
+            if not all_classifier:
+                print(p.predict(classifier, f.readlines()))
+            else:
+                print(p.predict_all(f.readlines()))
+    except AssertionError:
+        print('Classifier not found:', classifier)
 
 if __name__ == '__main__':
     main(sys.argv[1:])
