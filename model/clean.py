@@ -41,5 +41,7 @@ def clean():
     train_df.to_csv(__TRAIN_CSV__)
     test_df.to_csv(__TEST_CSV__)
 
+    print('Successfully saved train_df to', __TRAIN_CSV__, 'test_df to', __TEST_CSV__)
+
 if __name__ == '__main__':
     clean()

@@ -3,6 +3,7 @@
   <head>
     <title>Fakenews Detection</title>
     <link rel='stylesheet' href='{{ url_for("static", filename = "css/bootstrap.min.css") }}'/>
+    <link rel='stylesheet' href='{{ url_for("static", filename = "css/index.css") }}'/>
   </head>
 
   <body>
@@ -10,9 +11,7 @@
       <div class='row'>
         <div class='col-sm-10 offset-sm-1 text-center'>
           <h1 class='page-title'>Fakenews Detection</h1>
-          <p>A project in Applied Natural Language Processing (CSC15008)</p>
-          <p><a target='_blank' href='https://github.com/trhgquan/fakenews-detection'>Project repository on GitHub</a></p>
-          
+          <p>Text Classification, in its simplest form.</p>
         </div>
 
         <div class='col-sm-10 offset-sm-1 text-center'>
@@ -32,15 +31,15 @@
           <table class='table table-sm table-responsive'>
             <thead>
               <tr>
-                <th scope='col'>Algorithm name</th>
+                <th scope='col'>Model</th>
                 <th scope='col'>Prediction</th>
               </tr>
             </thead>
             <tbody>
               {% for classifier_id, classifier_name in classifiers_list.items() %}
-              <tr>
+              <tr id='model_{{ classifier_id }}'>
                 <td>{{ classifier_name }}</td>
-                <td><span id='{{ classifier_id }}' class='badge bg-secondary'>Unknown</td>
+                <td><span id='badge_{{ classifier_id }}' class='badge bg-secondary'>Unknown</td>
               </tr>
               {% endfor %}
             </tbody>
@@ -48,6 +47,8 @@
         </div>
       </div>
     </div>
+
+    {% include 'html/footer.html'  %}
 
     <script type='text/javascript' src='{{ url_for("static", filename = "js/jquery.min.js") }}'></script>
     <script type='text/javascript' src='{{ url_for("static", filename = "js/bootstrap.min.js") }}'></script>

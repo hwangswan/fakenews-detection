@@ -27,22 +27,30 @@ $('#articleSubmit').on('click', function() {
     let trueCounts = 0, fakeCounts = 0;
 
     $.each(response.result, function(id, result) {
-      let currentItem = $('#' + id);
+      // Update row css
+      let currentRow = $('#model_' + id);
+      currentRow.removeClass('table-success');
+      currentRow.removeClass('table-danger');
+
+      // Update badge
+      let currentBadgeItem = $('#badge_' + id);
   
-      currentItem.removeClass('bg-secondary');
-      currentItem.removeClass('bg-success');
-      currentItem.removeClass('bg-danger');
-      currentItem.text('');
+      currentBadgeItem.removeClass('bg-secondary');
+      currentBadgeItem.removeClass('bg-success');
+      currentBadgeItem.removeClass('bg-danger');
+      currentBadgeItem.text('');
 
       if (result == 1) {
-        currentItem.addClass('bg-success');
-        currentItem.text('True news');
+        currentRow.addClass('table-success');
+        currentBadgeItem.addClass('bg-success');
+        currentBadgeItem.text('True news');
         ++trueCounts;
       }
 
       else {
-        currentItem.addClass('bg-danger');
-        currentItem.text('Fake news');
+        currentRow.addClass('table-danger');
+        currentBadgeItem.addClass('bg-danger');
+        currentBadgeItem.text('Fake news');
         ++fakeCounts;
       }
     });
