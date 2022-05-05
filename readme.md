@@ -10,18 +10,38 @@ VNUHCM - University of Science, mùa Xuân 2022
 Fake and real news dataset (Kaggle): https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset
 
 ## Model generation
-- Đọc kỹ hướng dẫn trong file `model/data-cleaning.ipynb`, sau đó chạy file `model/datacleaning.py`.
-- Đọc file `model/model-training.ipynb`, sau đó chạy file `model/train.py`. File model sẽ được lưu trong folder `model/model`.
-- Chạy `model/migrate.sh` để copy model sang đúng vị trí trên server.
+- Cài các package cần thiết:
+    ```
+    pip install -r requirements.txt
+    ```
+- Clean data: Đọc kỹ hướng dẫn trong file `model/data-cleaning.ipynb`, sau đó chạy notebook hoặc chạy file `model/clean.py`:
+    ```
+    cd model
+    python clean.py
+    ```
+
+- Đọc file `model/model-training.ipynb`, sau đó chạy notebook hoặc chạy file `model/train.py`:
+    ```
+    cd model
+    python train.py
+    ```
+    File model sẽ được lưu trong folder `model/model`.
+
+## Data migration
+Copy `model/model` sang `web/app/model`. Hoặc:
+```
+cd model
+bash migrate.sh
+```
 
 ## Demo prediction
 ```
 cd model
-demo.py --input=<input_file> --classifier=<classifier_name>
+python demo.py --input=<input_file> --classifier=<classifier_name>
 ```
 
 - `<input_file>` gồm nhiều dòng, mỗi dòng là 1 article cần đánh giá True/Fake.
-- `classifier_name` nằm trong list sau:
+- `classifier_name` lấy từ list sau:
 
 |classifer_name|Classifier Name|
 |--------------|---------------|
@@ -34,26 +54,29 @@ demo.py --input=<input_file> --classifier=<classifier_name>
 |`naive_bayes`|Naive Bayes|
 |`linear_svc`|Linear SVC|
 
+- Predictions với tất cả các classifiers hiện có:
+    ```
+    cd demo
+    python demo.py --input=<input_file> --all
+    ```
+
 ## Tech used
 - Flask
 - Bootstrap v5 (có jQuery)
 
 ## Server
-```
-pip install -r requirements.txt
-```
+Yêu cầu:
+- Đã cài các package cần thiết.
+- Đã generate model.
+- Đã migrate model.
+
+Các bước này đã nêu lần lượt bên trên.
 
 ### Linux
 ```
 cd web
 python3 -m venv venv
 . venv/bin/activate
-```
-
-Copy model vào server directiory:
-```
-cd model
-bash migrate.sh
 ```
 
 Chạy server:
@@ -68,8 +91,6 @@ cd web
 python -m venv venv
 venv\Scripts\activate
 ```
-
-Copy model vào server directory (từ `model/model` vào `web/app/model`)
 
 Chạy server:
 ```
