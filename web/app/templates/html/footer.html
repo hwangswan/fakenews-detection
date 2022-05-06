@@ -2,8 +2,8 @@
   <div class='container'>
     <div class='row'>
       <div class='col'>
-        <a href='https://github.com/trhgquan'>@trhgquan</a>
-        <small class='d-block mb-3 text-muted'>&copy; 2022</small>
+        <img class='mb-2' src='{{ url_for("static", filename = "icon/favicon.ico") }}' width='30' height='30'/>
+        <small class='d-block mb-3 text-muted'>&copy; <span id='copyright_year'></span></small>
       </div>
       <div class='col'>
         <p class='text-muted'>A project in Applied Natural Language Processing (CSC15008). 
@@ -15,3 +15,7 @@
     </div>
   </div>
 </footer>
+<script type='text/javascript'>
+  let currentYear = new Date().getFullYear();
+  document.getElementById('copyright_year').innerText = currentYear;
+</script>

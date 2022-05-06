@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Fakenews Detection</title>
+    <link rel='shortcut icon' href='{{ url_for("static", filename = "icon/favicon.ico") }}'/>
+    <link rel='stylesheet' href='{{ url_for("static", filename = "css/bootstrap.min.css") }}'/>
+    <link rel='stylesheet' href='{{ url_for("static", filename = "css/index.css") }}'/>
+  </head>
+
+  <body>
+    <div class='container'>
+      <div class='row'>
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+
+    {% include 'html/footer.html'  %}
+
+    <script type='text/javascript' src='{{ url_for("static", filename = "js/jquery.min.js") }}'></script>
+    <script type='text/javascript' src='{{ url_for("static", filename = "js/bootstrap.min.js") }}'></script>
+    {% block extra_scripts %}{% endblock %}
+  </body>
+</html>

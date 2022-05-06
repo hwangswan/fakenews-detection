@@ -29,7 +29,11 @@ def create_app(test_config = None):
 
     @app.route('/')
     def index():
-        classifiers_list = Pipeline().get_classifiers_list()
+        try:
+            classifiers_list = Pipeline().get_classifiers_list()
+        except FileNotFoundError:
+            return render_template('html/404.html')
+
         return render_template('html/index.html', classifiers_list = classifiers_list)
 
     @app.route('/index_js')
