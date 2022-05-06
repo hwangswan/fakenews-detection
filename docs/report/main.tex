@@ -14,7 +14,7 @@
 \usepackage{multicol}
 \usepackage{tikz}
 
-\usetikzlibrary{shapes.geometric}
+\usetikzlibrary{calc,trees,positioning,arrows.meta,chains,shapes.geometric, decorations.pathreplacing,decorations.pathmorphing,shapes, matrix,shapes.symbols, fit}
 \tikzset{
     every node/.style={
         font=\scriptsize
@@ -42,6 +42,7 @@
         level distance=1.125cm
     }
 }
+\tikzstyle{block} = [rectangle, draw, text centered, rounded corners, minimum height=3em]
 
 \setlength{\headheight}{29.43912pt}
 
@@ -108,12 +109,41 @@ Thầy Nguyễn Hồng Bửu Long
 \pagebreak
 
 \section{Giới thiệu đề tài}
+\subsection{Tổng quan bài toán Text Classification (Phân loại văn bản)}
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}
+		[node distance=4cm,
+		start chain=going right,]
+		\node (n1) at (0,0) [block]  {Document};
+		\node (n2) [block, right of=n1] {Feature Extraction};
+		\node (n3) [block, right of=n2] {Classification Model};
+		\node (n4) [block, right of=n3] {Evaluation};
+		\node (n5) at (6,2) [block] {Dimensionality Reduction};
+		% Connectors
+		\draw [->] (n1) -- (n2);
+		\draw [->, dashed] (n2) -- (n3);
+		\draw [->] (n3) -- (n4);
+		\draw[->, dashed, to path={-| (\tikztotarget)}](n5) edge (n3);
+		\draw[->, dashed, to path={|- (\tikztotarget)}](n2) edge (n5);
+	\end{tikzpicture}
+	\caption{Tổng quan bài toán Text Classification (Phân loại văn bản)\cite{Kowsari_2019}}
+\end{figure}
+\begin{itemize}
+\item Document: ngữ liệu có thể là văn bản, đoạn văn (paragraph), câu văn (sentence) hoặc một phần của câu (sub-sentence).
+\item Feature Extraction: trích xuất các đặc trưng từ ngữ liệu.
+\item Dimensional Reduction: làm giảm số lượng đặc trưng, qua đó làm giảm chi phí tính toán và bộ nhớ sử dụng.
+\item Classificaion Model: có thể là một hoặc nhiều classifier (bộ phân lớp) kết hợp để phân loại ngữ liệu.
+\item Evaluation: Prediction và Scoring, đánh giá mô hình dựa trên kết quả phân loại.
+\end{itemize}
+
+\subsection{Đề tài Fakenews Detection (Phân loại tin giả)}
 Tin giả (fake news) đã trở thành mối quan tâm trong những năm gần đây. Nhiều hệ thống phân loại tin giả đã được xây dựng và hoạt động rất tốt, dựa trên các mô hình học máy phổ biến.
 
 Dựa trên mô hình Cây quyết định (Decision Tree) và một số mô hình học máy khác, nhóm tạo ra một công cụ phân loại tin giả, cho kết quả chính xác ở mức chấp nhận được. Dù kết hợp nhiều mô hình học máy nhưng trọng tâm của nhóm sẽ tìm hiểu, nghiên cứu và phát triển xoay quanh mô hinh Cây quyết định.
 \section{Quá trình xây dựng công cụ}
 \subsection{Dữ liệu}
-Dữ liệu gồm 44898 bài báo, trích từ các nền tảng nổi tiếng trong năm 2017. \href{https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset}{Đường link đến dataset}.
+Dữ liệu lấy từ Kaggle gồm 44898 bài báo, trích từ các nền tảng nổi tiếng trong năm 2017. \href{https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset}{Đường link đến dataset}.
 
 \subsection{Tiền xử lý (Preprocessing)}
 Các bước tiền xử lí bao gồm:
@@ -135,17 +165,18 @@ Các bước tiền xử lí bao gồm:
 \subsection{Trích xuất đặc trưng (Feature Extraction) với TF-IDF}
 Ta không tiến hành "học thuộc" một câu, mà chỉ học các đặc trưng của câu đó. Có nhiều phương pháp trích xuất đặc trưng: Bag of Words (BoW), TF-IDF, GloVe, Word2Vec, ..etc.
 
+Một ví dụ: Với câu văn \textit{The quick brown fox jumps over the lazy dog}, các features được trích xuất với TF-IDF là \{brown, dog, fox, jumps, lazy, quick\}.
 \subsubsection{TF-IDF (Term Frequency - Inverse Document Frequency)}
-Phương pháp làm giảm ảnh hưởng những từ thường xuyên xuất hiện trong corpus. Trọng số $W$ của một từ (term) $t$ trong văn bản (document) $d$ được tính như sau:
+Đươc Karen Spärck Jones sáng chế năm 1972\cite{Jones72astatistical}, phương pháp này làm giảm ảnh hưởng những từ thường xuyên xuất hiện trong corpus. Trọng số $W$ của một từ (term) $t$ trong văn bản (document) $d$ được tính như sau:
 $$
 W(d, t) = TF(d, t) \times \log\left(\frac{N}{df(t)}\right)
 $$
 Với $N$ là tổng số document, $df(t)$ là tổng số lượng document chứa term $t$, $TF(d, t)$ là số lần xuất hiện của từ $t$ trong document $d$.
 
 \subsection{Cây quyết định (Decision Tree)}
-Thuật toán phân lớp sử dụng Cây quyết định (Decision Tree) được Ross Quinlann phát minh năm 1986\cite{DBLP:journals/ml/Quinlan86}, là phương pháp xuất hiện từ rất sớm và rất thành công trong nhiều lĩnh vực của Học máy nói riêng và Text Classification nói chung. Từ 1986 đến nay đã có các phiên bản ID3, ID4.5, ID5.0, CART.\footnote{Phiên bản \texttt{sklearn.tree.DecisionTreeClassifier} sử dụng phiên bản customise của thuật toán CART.\cite{scikit-learn}}
+Thuật toán phân lớp sử dụng Cây quyết định (Decision Tree) được Ross Quinlann phát minh năm 1986\cite{DBLP:journals/ml/Quinlan86}, là phương pháp xuất hiện từ rất sớm và rất thành công trong nhiều lĩnh vực của Học máy nói chung và Text Classification nói riêng. Từ 1986 đến nay đã có các phiên bản ID3, ID4.5, ID5.0, CART.\footnote{\texttt{sklearn.tree.DecisionTreeClassifier} sử dụng phiên bản customise của thuật toán CART.\cite{scikit-learn}}
 
-Ý tưởng của thuật toán là tạo một cấu trúc dữ liệu cây, mỗi nút là một thuộc tính của tập dữ liệu đã phân lớp. Ví dụ một cây quyết định và tập dữ liệu phân lớp:
+Ý tưởng của thuật toán là tạo một cấu trúc dữ liệu cây, mỗi nút lá là một thuộc tính của tập dữ liệu đã phân lớp; mỗi nút không phải nút lá biểu thị một phép thử với một thuộc tính; mỗi nhánh biểu thị kết quả của phép thử. Ví dụ một cây quyết định và tập dữ liệu phân lớp:
 \begin{figure}[H]
 \begin{multicols}{2}
 \begin{tikzpicture}
@@ -190,20 +221,24 @@ Khi đó độ đo Information Gains của thuộc tính $A$ là hiệu của \t
 $$
 A(I) = H\left(\frac{p}{n + p}, \frac{n}{n + p}\right) - EH(A) 
 $$
-Ta sẽ chọn thuộc tính nào có Information Gains lớn nhất làm nút cha. Các thuộc tính có Entropy = 0 mặc nhiên sẽ là nút lá.
+Ta sẽ chọn thuộc tính nào có Information Gains lớn nhất làm nút cha.
 
 \subsubsection{Lựa chọn đặc trưng (Feature Selection) với độ đo Gini Index}
 Gini Index được tính toán như sau:
 $$
 \text{Gini} = 1 - \sum_{i = 1}^n p_i ^ 2
 $$
-Vẫn như Entropy, ta chọn thuộc tính có Gini Index nhỏ nhất làm nút cha, sau đó tính toán Gini Index với các nút còn lại.
+Khác với Entropy, ta chọn thuộc tính có Gini Index nhỏ nhất làm nút cha, sau đó tính toán Gini Index với các nút còn lại.
 
-\section{Huấn luyện và Kiểm thử}
+\section{Huấn luyện, Kiểm thử và Triển khai}
+
+\subsection{Huấn luyện \& Kiểm thử}
 Tiến hành huấn luyện với các thông số sau:
 \begin{itemize}
 \item Kích thước training dataset: 44798 articles, đã gán nhãn.
 \item Kích thước testing dataset: 100 articles, đã gán nhãn. Đây là 50 article chọn ngẫu nhiên từ tập True \& 50 article chọn ngẫu nhiên từ tập Fake.
+\item Trích xuất đặc trưng: sử dụng \texttt{sklearn.feature\_extraction.text.TfidfVectorizer} với tham số \texttt{stop\_words = 'english'}
+\item Bộ phân lớp: \texttt{sklearn.tree.DecisionTreeClassifier} với tham số \texttt{criterion = 'entropy'} 
 \end{itemize}
 \begin{figure}[H]
 \begin{multicols}{2}
@@ -227,19 +262,68 @@ weighted avg & 1.00 & 1.00 & 1.00 & 100 \\
 \caption{Heatmap và \texttt{classification\_report} sau khi train}
 \end{figure}
 Như có thể thấy, độ chính xác của mô hình là gần như tuyệt đối (1.00).
-\section{Tổng kết}
-Một số ưu điểm của thuật toán Decision Tree có thể kể đến:
+
+\subsection{Pipeline}
 \begin{itemize}
-\item Là thuật toán phổ biến, dễ cài đặt.
+	\item Ngoài Decision Tree, ứng dụng có dùng một số mô hình khác: Logistic Regression, SGD, Random Forest, Gradient Boosting, k-Nearest Neighbors, Multinomial Naive Bayes và Linear SVM.
+	\item Kết quả dự đoán:
+	\begin{itemize}
+		\item Nếu số lượng \textit{fake} predictions $\geq$ \textit{real} predictions, tin đó là tin \textbf{fake}.
+		\item Nếu số lượng \textit{fake} predictions $<$ \textit{real} predictions, tin đó là tin \textbf{real}.
+	\end{itemize}
+\end{itemize}
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[
+		node distance=7mm,
+		title/.style={font=\fontsize{4}{4}\color{black!50}},
+		typetag/.style={rectangle, draw=black!50, font=\scriptsize\ttfamily, anchor=west}
+		]
+		\node (dat) at (-5, -2.75) [draw=black!50, block] {Article};
+		\node (pp) at (-3, -2.75) [draw=black!50, block] {Preprocess};
+		
+		\node (vt) at (-.5, -2.43) [title] {Vectorizer};
+		\node (tf) [below=of vt.west, typetag, xshift=2mm] {TF-IDF};
+		
+		\node (vts) [draw=black!50, rounded corners, fit={(vt) (tf)}] {};
+		
+		\node (cl) at (2.5, 0) [title] {Classifier};
+		
+		\node (dt) [below=of cl.west, typetag, xshift=2mm] {Decision Tree};
+		\node (lr) [below=of dt.west, typetag] {Logistic Regression};
+		\node (sc) [below=of lr.west, typetag] {SGD};
+		\node (rf) [below=of sc.west, typetag] {Random Forest};
+		\node (gb) [below=of rf.west, typetag] {Gradient Boosting};
+		\node (kn) [below=of gb.west, typetag] {K-Nearest Neighbors};
+		\node (nb) [below=of kn.west, typetag] {Multinomial NB};
+		\node (ls) [below=of nb.west, typetag] {Linear SVM};
+		
+		\node (cls) [draw=black!50, rounded corners, fit={(cl) (dt) (lr) (sc) (rf) (gb) (kn) (nb) (ls)}] {};
+		
+		\node (pred) at (7, -2.77) [draw=black!50, block] {Prediction};
+		
+		\draw [->] (dat) -- (pp);
+		\draw [->] (pp) -- (vts);
+		\draw [->] (vts) -- (cls);
+		\draw [->] (cls) -- (pred);
+	\end{tikzpicture}
+	\caption{Fakenews Detection Pipeline}
+\end{figure}
+Ứng dụng sử dụng microframework Flask để deploy trên nền web. Giao diện sử dụng Bootstrap v5.
+
+\section{Tổng kết}
+Một số ưu điểm có thể kể đến:
+\begin{itemize}
+\item Các thuật toán dùng trong đề tài là các thuật toán phổ biến, dễ cài đặt.
 \item Cho độ chính xác cao với tập dữ liệu nhỏ.
 \item Thời gian huấn luyện tương đối nhanh.
 \end{itemize}
 Tuy nhiên, đi kèm là một số khuyết điểm:
 \begin{itemize}
-\item Dễ bị overfit, có thể khắc phục bằng phương pháp cắt tỉa thu gọn tập luật.
+\item Một số mô hình rất dễ bị overfit.
 \item Xáo trộn dữ liệu có thể dẫn đến kết quả bị sai khác.\cite{Kowsari_2019}
 \end{itemize}
-
+Với sản phẩm hoàn chỉnh, bạn đọc có thể xem tại \href{https://github.com/trhgquan/fakenews-detection}{GitHub Repository}.
 
 \cleardoublepage
 \phantomsection
