@@ -3,7 +3,7 @@
 
 VNUHCM - University of Science, mùa Xuân 2022
 
-## Abstraction
+## Abstract
 Đối với bài toán Text Classification, nhóm xây dựng ứng dụng phát hiện tin giả (Fakenews Detection), sử dụng một số mô hình máy học để đưa ra dự đoán một mẩu tin là thật (true) hay giả (fake).
 
 ## Dataset
