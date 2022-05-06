@@ -7,7 +7,7 @@
 \usepackage{booktabs}
 \usepackage{tikz}
 
-\usetikzlibrary{arrows,shapes}
+\usetikzlibrary{calc,trees,positioning,arrows.meta,chains,shapes.geometric, decorations.pathreplacing,decorations.pathmorphing,shapes, matrix,shapes.symbols, fit}
 \tikzset{
     every node/.style={
         font=\scriptsize
@@ -33,8 +33,10 @@
         edge from parent path={[-latex] (\tikzparentnode) -| (\tikzchildnode)},
         sibling distance=3cm,
         level distance=1.125cm
-    },
+    }
 }
+
+\tikzstyle{block} = [rectangle, draw, text centered, rounded corners, minimum height=3em]
 
 \usepackage[backend=biber]{biblatex}
 \addbibresource{sample.bib}
@@ -67,14 +69,36 @@
 	\Huge{\centerline{\textbf{Giới thiệu}}}
 \end{frame}
 
+\subsection{Tổng quan bài toán Text Classification}
+\begin{frame}{Giới thiệu - Tổng quan bài toán Text Classification}
+\begin{figure}[H]
+	\begin{tikzpicture}
+		[node distance=4cm,
+		start chain=going right,]
+		\node (n1) at (0,0) [block]  {Document};
+		\node (n2) [block, right of=n1] {Feature Extraction};
+		\node (n3) [block, right of=n2] {Classification Model};
+		\node (n4) [block, right of=n3] {Evaluation};
+		\node (n5) at (6,2) [block] {Dimensionality Reduction};
+		% Connectors
+		\draw [->] (n1) -- (n2);
+		\draw [->, dashed] (n2) -- (n3);
+		\draw [->] (n3) -- (n4);
+		\draw[->, dashed, to path={-| (\tikztotarget)}](n5) edge (n3);
+		\draw[->, dashed, to path={|- (\tikztotarget)}](n2) edge (n5);
+	\end{tikzpicture}
+	\caption{Tổng quan bài toán Text Classification (Phân loại văn bản)\cite{Kowsari_2019}}
+\end{figure}
+\end{frame}
 
-\begin{frame}{Giới thiệu}
+\subsection{Đề tài Fakenews Detection}
+\begin{frame}{Giới thiệu (cont.) - Fakenews Detection}
 \begin{alertblock}{Nghe có vẻ \textbf{thật}, nhưng đây là \textbf{fake news}}
 "Wikileaks released tonight a new cache of documents, showing that the United States  National Security Administration bugged private meetings between major world leaders, including the United Nations Secretary General.The N.S.A. bugged meetings between U.N.S.G. Ban Ki-Moon, German chancellor Angela Merkel, Italian prime minister Silvio Berlusconi, Israeli prime minister Benjamin Netanyahu, and several representatives from other major world governments, listening in on their conversations on climate change, global economics, and even  how to deal with Obama,  according to the new documents. "
 \end{alertblock}
 \end{frame}
 
-\begin{frame}{Giới thiệu (cont.)}
+\begin{frame}{Giới thiệu (cont.) - Fakenews Detection}
 \begin{itemize}
 \item Tin giả (fakenews) đã trở thành chủ đề đáng quan tâm trong những năm gần đây.
 \item Nhu cầu xây dựng công cụ xác minh tin giả (fakenews detector) trở nên cần thiết.
@@ -82,11 +106,11 @@
 \begin{itemize}
     \item Gán nhãn một article là `0` nếu câu đó là tin giả, `1` nếu đó là tin thật.
 \end{itemize}
+\item Ứng dụng dùng nhiều mô hình phân lớp để dự đoán, trong đó Decision Tree là tiêu biểu.
 \end{itemize}
 \end{frame}
 
 \section{Fakenews Detection}
-
 \begin{frame}
 	\Huge{\centerline{\textbf{Data}}}
 \end{frame}
@@ -98,7 +122,6 @@ Dataset gồm 44898 bài báo được thu thập trong năm 2017. \href{https:/
 \includegraphics[width=0.8\linewidth]{img/quick-glance-at-data.PNG}
 \end{figure}
 \end{frame}
-
 
 \begin{frame}
 	\Huge{\centerline{\textbf{Preprocessing}}}
@@ -147,7 +170,6 @@ Dataset gồm 44898 bài báo được thu thập trong năm 2017. \href{https:/
 \begin{block}{Trước}
 LONDON (Reuters) - Abdul Daoud spilt most of the cappuccino into the saucer the first time he served Princess Diana, his nerves getting the better of him. Almost 20 years on since she was killed when her car crashed in a Paris tunnel, he still works surrounded by pictures of the woman he calls "the princess of the people" in his cafe, named Diana, his very personal attempt to keep her memory alive.
 \end{block}
-\pause
 \column{.4\textwidth}
 \begin{block}{Sau}
 london  reuters    abdul daoud spilt most of the cappuccino into the saucer the first time he served princess diana  his nerves getting the better of him  almost  years on since she was killed when her car crashed in a paris tunnel  he still works surrounded by pictures of the woman he calls  the princess of the people  in his cafe  named diana  his very personal attempt to keep her memory alive 
@@ -161,16 +183,21 @@ london  reuters    abdul daoud spilt most of the cappuccino into the saucer the 
 \end{frame}
 
 \begin{frame}{Feature Extraction}
-\begin{itemize}
-\item Ta không `học thuộc` một câu, mà chỉ `học` những gì đặc trưng của câu đó.
-\item Có nhiều cách trích xuất đặc trưng của câu: TF-IDF, BoW (đánh trọng số); GloVe, Word2Vec (chuyển câu thành dạng vector)
-\item Một cách làm `tầm thường`: tính tần suất xuất hiện của những từ trong câu (trong đoạn văn / bài viết) và dựa trên tần suất lựa chọn các từ đặc trưng (TF).
-\end{itemize}
+Ta không `học thuộc` một câu, mà chỉ `học` những gì đặc trưng của câu đó.
+\begin{block}{Câu văn}
+The quick brown fox jumps over the lazy dog.
+\end{block}
+
+\begin{block}{Đặc trưng}
+	\{brown, dog, fox, jumps, lazy, quick\}
+\end{block}
+
+Có nhiều cách trích xuất đặc trưng của câu: TF-IDF, BoW (đánh trọng số); GloVe, Word2Vec (chuyển câu thành dạng vector).
 \end{frame}
 
 \begin{frame}{Feature Extraction - TF-IDF}
 \begin{itemize}
-\item Term Frequency - Inverse Document Frequency
+\item Term Frequency - Inverse Document Frequency, được  Karen Spärck Jones giới thiệu năm 1972\cite{Jones72astatistical}
 \item Phương pháp này làm giảm ảnh hưởng của những từ thường xuyên xuất hiện trong corpus.
 \item Công thức biểu diễn trọng số $W$ của một từ (term) $t$ trong văn bản (document) $d$:
 $$
@@ -190,7 +217,7 @@ Với $N$ là tổng số document, $df(t)$ là số lượng document chứa te
 \begin{frame}{Decision Tree}
 Nhắc lại:
 \begin{itemize}
-\item Được Ross Quinlan sáng tạo năm 1986\cite{DBLP:journals/ml/Quinlan86}, là phương pháp xuất hiện từ rất sớm và rất thành công trong nhiều lĩnh vực của text classification.
+\item Được Ross Quinlan sáng tạo năm 1986\cite{DBLP:journals/ml/Quinlan86}, là phương pháp xuất hiện từ rất sớm và rất thành công trong nhiều lĩnh vực của Text Classification.
 \item Có nhiều phiên bản: ID3, ID4.5, ID5.0, CART\footnote{sklearn.tree.DecisionTreeClassifier sử dụng phiên bản customize của thuật CART\cite{scikit-learn}}
 \item Ý tưởng: tạo một cấu trúc dữ liệu cây, mỗi nút lá là một thuộc tính của tập dữ liệu đã phân lớp; mỗi nút không phải nút lá biểu thị một phép thử với một thuộc tính; mỗi nhánh biểu thị kết quả của phép thử.
 \end{itemize}
@@ -227,7 +254,7 @@ child { node [outcome] { Ở nhà } };
 \end{figure}
 
 \begin{itemize}
-	\item Q: Làm sao biết thuộc tính nào là nút cha, thuộc tính nào là nút con?
+	\item Q: Làm sao chọn nút cha, nút con?
 	\item A: Feature Selection, có thể sử dụng độ đo Information Gains (IG) hoặc Gini Index.
 \end{itemize}
 \end{frame}
@@ -278,25 +305,24 @@ Ta sẽ chọn thuộc tính có Information Gain lớn nhất làm nút cha.
 \end{frame}
 
 \begin{frame}{Training \& testing}
-\begin{figure}
-\includegraphics[width=0.35\linewidth]{img/data-summerise.png}
-\caption{Tương quan các lớp fake (0) và real (1) trong dataset}
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=.4]{img/data-summerise.png}
+	\caption{Tương quan các lớp fake (0) và real (1) trong dataset}
 \end{figure}
-
 \begin{itemize}
 \item Kích thước tập train: 44798 samples, gồm các articles đã được gán nhãn 0 (fake) và 1 (real).
-\item Kích thước tập test: 100 samples, gồm 50 article được chọn ngẫu nhiên từ tập real + 50 article được chọn ngẫu nhiên từ tập fake.
+\item Kích thước tập test: 100 samples, gồm 50 articles được chọn ngẫu nhiên từ tập real + 50 articles được chọn ngẫu nhiên từ tập fake.
 \item Sử dụng \texttt{sklearn.tree.DecisionTreeClassifier}.
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Training \& testing (cont.)}
+\begin{figure}
 \begin{columns}[c]
 \column{.35\textwidth}
-\begin{figure}
-\includegraphics[width=0.8\linewidth]{img/train-result.png}
-\caption{Heatmap kết quả testing}
-\end{figure}
+\includegraphics[width=0.9\linewidth]{img/train-result.png}
+
 \column{.65\textwidth}
 \begin{table}
 \begin{tabular}{l l l l l}
@@ -310,14 +336,72 @@ macro avg & 1.00 & 1.00 & 1.00 & 100 \\
 weighted avg & 1.00 & 1.00 & 1.00 & 100 \\
 \bottomrule
 \end{tabular}
-\caption{\texttt{classification\_report} sau khi train}
 \end{table}
 \end{columns}
+\caption{Testing heatmap và \texttt{classification\_report} sau khi train}
+\end{figure}
 Nhận xét: 
 \begin{itemize}
     \item Độ chính xác gần như tuyệt đối (1.00).
     \item Thời gian train rất nhanh.
 \end{itemize}
+\end{frame}
+
+\subsection{Pipeline}
+
+\begin{frame}
+	\Huge{\centerline{\textbf{Pipeline}}}
+\end{frame}
+
+\begin{frame}{Pipeline}
+\begin{itemize}
+	\item Ngoài Decision Tree, ứng dụng có dùng một số mô hình khác: Logistic Regression, SGD, Random Forest, Gradient Boosting, k-Nearest Neighbors, Multinomial Naive Bayes và Linear SVM.
+	\item Kết quả dự đoán:
+	\begin{itemize}
+		\item Nếu số lượng \textit{fake} predictions $\geq$ \textit{real} predictions, tin đó là tin \textbf{fake}.
+		\item Nếu số lượng \textit{fake} predictions $<$ \textit{real} predictions, tin đó là tin \textbf{real}.
+	\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Pipeline (cont.)}
+	\begin{figure}[H]
+		\centering
+		\begin{tikzpicture}[
+			node distance=7mm,
+			title/.style={font=\fontsize{4}{4}\color{black!50}},
+			typetag/.style={rectangle, draw=black!50, font=\scriptsize\ttfamily, anchor=west}
+			]
+			\node (dat) at (-5, -2.75) [block, draw=black!50] {Article};
+			\node (pp) at (-3, -2.75) [block, draw=black!50] {Preprocess};
+			
+			\node (vt) at (-.5, -2.43) [title] {Vectorizer};
+			\node (tf) [below=of vt.west, typetag, xshift=2mm] {TF-IDF};
+			
+			\node (vts) [draw=black!50, rounded corners, fit={(vt) (tf)}] {};
+			
+			\node (cl) at (2.5, 0) [title] {Classifier};
+			
+			\node (dt) [below=of cl.west, typetag, xshift=2mm] {Decision Tree};
+			\node (lr) [below=of dt.west, typetag] {Logistic Regression};
+			\node (sc) [below=of lr.west, typetag] {SGD};
+			\node (rf) [below=of sc.west, typetag] {Random Forest};
+			\node (gb) [below=of rf.west, typetag] {Gradient Boosting};
+			\node (kn) [below=of gb.west, typetag] {K-Nearest Neighbors};
+			\node (nb) [below=of kn.west, typetag] {Multinomial NB};
+			\node (ls) [below=of nb.west, typetag] {Linear SVM};
+			
+			\node (cls) [draw=black!50, rounded corners, fit={(cl) (dt) (lr) (sc) (rf) (gb) (kn) (nb) (ls)}] {};
+			
+			\node (pred) at (7, -2.77) [block, draw=black!50] {Prediction};
+			
+			\draw [->] (dat) -- (pp);
+			\draw [->] (pp) -- (vts);
+			\draw [->] (vts) -- (cls);
+			\draw [->] (cls) -- (pred);
+		\end{tikzpicture}
+		\caption{Fakenews Detection Pipeline}
+	\end{figure}
 \end{frame}
 
 \section{Demo}
@@ -329,13 +413,13 @@ Nhận xét:
 \begin{frame}{Tổng kết}
 Ưu điểm:
 \begin{itemize}
-\item Decision Tree là thuật toán phân lớp phổ biến, dễ cài đặt.
+\item Các thuật toán dùng trong đề tài là các thuật toán phổ biến, dễ cài đặt.
 \item Cho độ chính xác cao với tập dữ liệu nhỏ.
 \item Thời gian huấn luyện nhanh.
 \end{itemize}
 Khuyết điểm:
 \begin{itemize}
-\item Dễ bị overfit. Xử lí: pruning.
+\item Một số mô hình rất dễ bị overfit.
 \item `Nhạy cảm` với sự xáo trộn dữ liệu.\cite{Kowsari_2019}
 \begin{itemize}
 	\item "Thử" xài nltk.stop\_word thay cho english stopwords của TfidfVectorizer?
