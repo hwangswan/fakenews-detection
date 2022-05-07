@@ -6,40 +6,37 @@
   <p>Text Classification, in its simplest form.</p>
 </div>
 
+<div class='col-sm-10 offset-sm-1 text-center'>
+  <form>
+    <div class='mb-3'>
+      <textarea id='articleContent' class='form-control' rows="10" placeholder="Your article goes here..." required></textarea>
+      <div id='articleContent-message'></div>
+    </div>
 
-  <div class='col-sm-10 offset-sm-1 text-center'>
-    <form>
-      <div class='mb-3'>
-        <textarea id='articleContent' class='form-control' rows="10" placeholder="Your article goes here..." required></textarea>
-        <div id='articleContent-message'></div>
-      </div>
+    <div class='mb-3'>
+      <button type='button' id='articleSubmit' class='btn btn-lg btn-outline-primary'>Fake or True?</button>
+    </div>
+  </form>
+</div>
 
-      <div class='mb-3'>
-        <button type='button' id='articleSubmit' class='btn btn-lg btn-outline-primary'>Fake or True?</button>
-      </div>
-    </form>
-  </div>
-
-
-  <div class='col-sm-6 offset-sm-3'>
-    <table class='table table-hover table-bordered table-responsive'>
-      <thead class='table-light'>
-        <tr>
-          <th scope='col'>Model</th>
-          <th scope='col'>Prediction</th>
+<div class='col-sm-6 offset-sm-3'>
+  <table class='table table-hover table-bordered table-responsive'>
+    <thead class='table-light'>
+      <tr>
+        <th scope='col'>Model</th>
+        <th scope='col'>Prediction</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for classifier_id, classifier_name in classifiers_list.items() %}
+        <tr id='model_{{ classifier_id }}'>
+          <td>{{ classifier_name }}</td>
+          <td><span id='badge_{{ classifier_id }}' class='badge bg-secondary'>Unknown</td>
         </tr>
-      </thead>
-      <tbody>
-        {% for classifier_id, classifier_name in classifiers_list.items() %}
-          <tr id='model_{{ classifier_id }}'>
-            <td>{{ classifier_name }}</td>
-            <td class='align-middle'><span id='badge_{{ classifier_id }}' class='badge bg-secondary'>Unknown</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endblock %}
 
 {% block extra_scripts %}

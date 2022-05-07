@@ -60,13 +60,13 @@ $('#articleSubmit').on('click', function() {
     if (trueCounts > fakeCounts) {
       $('#articleContent').addClass('is-valid');
       $('#articleContent-message').addClass('valid-feedback');
-      $('#articleContent-message').text('This could be a True News since ' + fakeCounts + ' / ' + totalClassifiers + ' of our classifiers have voted against it.');
+      $('#articleContent-message').text('This could be True News since ' + fakeCounts + ' / ' + totalClassifiers + ' of our classifiers have voted against it.');
     }
 
     else {
       $('#articleContent').addClass('is-invalid');
       $('#articleContent-message').addClass('invalid-feedback');
-      $('#articleContent-message').text('This could be a Fake News since ' + fakeCounts + ' / ' + totalClassifiers + ' of our classifiers have voted against it.');
+      $('#articleContent-message').text('This could be Fake News since ' + fakeCounts + ' / ' + totalClassifiers + ' of our classifiers have voted against it.');
     }
   });
 
