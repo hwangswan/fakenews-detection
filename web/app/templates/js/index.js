@@ -25,6 +25,7 @@ $('#articleSubmit').on('click', function() {
   // Request success without any errors.
   request.done(function(response, textStatus, jqXHR) {
     let trueCounts = 0, fakeCounts = 0;
+    let totalClassifiers = response.total_classifiers;
 
     $.each(response.result, function(id, result) {
       // Update row css
@@ -59,13 +60,13 @@ $('#articleSubmit').on('click', function() {
     if (trueCounts > fakeCounts) {
       $('#articleContent').addClass('is-valid');
       $('#articleContent-message').addClass('valid-feedback');
-      $('#articleContent-message').text('This could be a True News');
+      $('#articleContent-message').text('This could be a True News since ' + fakeCounts + ' / ' + totalClassifiers + ' of our classifiers have voted against it.');
     }
 
     else {
       $('#articleContent').addClass('is-invalid');
       $('#articleContent-message').addClass('invalid-feedback');
-      $('#articleContent-message').text('This could be a Fake News');
+      $('#articleContent-message').text('This could be a Fake News since ' + fakeCounts + ' / ' + totalClassifiers + ' of our classifiers have voted against it.');
     }
   });
 
