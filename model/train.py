@@ -54,7 +54,7 @@ class Train:
         with open(self.__model_dir + '{0}.pkl'.format(filename), 'wb') as f:
             pkl.dump(variable, f)
 
-        print('Finished dumping', filename)
+        print('Finished dumping', filename, end = '\n\n')
 
     @staticmethod
     def preprocess(text : str) -> str:
@@ -88,6 +88,7 @@ class Train:
         self.__X_test = self.__vectorizer.transform(X_test)
 
         print('TfidfVectorizer params:', self.__vectorizer.get_params())
+        print('TfidfVectorizer vocabulary size:', len(self.__vectorizer.vocabulary_))
 
         self.__dump(self.__vectorizer, 'vectorizer')
 

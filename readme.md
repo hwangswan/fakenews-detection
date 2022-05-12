@@ -11,7 +11,26 @@ Fake and real news dataset (Kaggle): https://www.kaggle.com/datasets/clmentbisai
 
 Download dataset và giải nén vào folder `model/dataset`.
 
-## Model generation
+## Model
+### Summarise
+- Kích thước tập train: 44798 samples.
+- Kích thước tập test: 100 samples (50 random real, 50 random fake).
+- TfidfVectorizer vocabulary size: 121613.
+
+|classifier|accuracy|
+|----------|--------|
+|Gradient Boosting|1.0|
+|Decision Tree|1.0|
+|Random Forest|1.0|
+|Linear SVC|0.99|
+|SGD Classifier|0.99|
+|Logistic Regression|0.99|
+|Naive Bayes|0.93|
+|K-Nearest Neighbors|0.79|
+
+Các tham số của từng mô hình, xem trong notebook `model/model-training.py` hoặc `model/train.py`.
+
+### Generate
 - Cài các package cần thiết:
     ```
     pip install -r requirements.txt
@@ -29,14 +48,14 @@ Download dataset và giải nén vào folder `model/dataset`.
     ```
     File model sẽ được lưu trong folder `model/model`.
 
-## Data migration
-Copy `model/model` sang `web/app/model`. Hoặc:
-```
-cd model
-bash migrate.sh
-```
+- Data migration sang server: copy `model/model` sang `web/app/model`; hoặc chạy `model/migrate.sh`:
+    ```
+    cd model
+    bash migrate.sh
+    ```
 
-## Demo prediction
+## Demo
+### Model prediction
 Cú pháp:
 ```
 cd model
@@ -63,7 +82,7 @@ cd model
 python predict.py --input=<input_file> --all
 ```
 
-## Server
+### Server
 Yêu cầu:
 - Đã cài các package cần thiết.
 - Đã generate model.
@@ -71,7 +90,7 @@ Yêu cầu:
 
 Các bước này đã nêu lần lượt bên trên.
 
-### Linux
+#### Linux
 ```
 cd web
 python3 -m venv venv
@@ -84,7 +103,7 @@ sudo chmod 0700 run_server.sh
 ./run_server.sh
 ```
 
-### Windows
+#### Windows
 ```
 cd web
 python -m venv venv
@@ -96,6 +115,6 @@ Chạy server:
 # Chay tung cau lenh trong web/run_server.sh
 ```
 
-### Tech used
+#### Tech used
 - Flask
 - Bootstrap v5 (có jQuery)
