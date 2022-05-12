@@ -63,10 +63,6 @@ cd model
 python predict.py --input=<input_file> --all
 ```
 
-## Tech used
-- Flask
-- Bootstrap v5 (có jQuery)
-
 ## Server
 Yêu cầu:
 - Đã cài các package cần thiết.
@@ -99,3 +95,7 @@ Chạy server:
 ```
 # Chay tung cau lenh trong web/run_server.sh
 ```
+
+### Tech used
+- Flask
+- Bootstrap v5 (có jQuery)
