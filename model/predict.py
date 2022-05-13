@@ -31,10 +31,12 @@ def main(argv):
         p = Pipeline()
 
         with open(input_file, 'r+') as f:
+            article = f.read()
+
             if not all_classifier:
-                print(p.predict(classifier, f.readlines()))
+                print(p.predict(classifier, [article]))
             else:
-                print(p.predict_all(f.readlines()))
+                print(p.predict_all([article]))
     except AssertionError:
         print('Classifier not found:', classifier)
 

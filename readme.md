@@ -64,7 +64,7 @@ cd model
 python predict.py --input=<input_file> --classifier=<classifier_name>
 ```
 
-- `<input_file>` gồm nhiều dòng, mỗi dòng là 1 article cần đánh giá True/Fake.
+- `<input_file>` có nội dung là article cần đánh giá True/Fake.
 - `classifier_name` lấy từ list sau:
 
 |classifer_name|Classifier Name|
