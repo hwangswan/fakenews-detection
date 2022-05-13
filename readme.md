@@ -4,7 +4,9 @@
 VNUHCM - University of Science, mùa Xuân 2022
 
 ## Abstract
-Đối với bài toán Text Classification, nhóm xây dựng ứng dụng phát hiện tin giả (Fakenews Detection), sử dụng một số mô hình máy học để đưa ra dự đoán một mẩu tin là thật (true) hay giả (fake).
+Đối với bài toán Text Classification, nhóm xây dựng ứng dụng phát hiện tin giả (Fakenews Detection), sử dụng kết hợp một số mô hình máy học để đưa ra dự đoán một mẩu tin là thật (true) hay giả (fake).
+
+Với báo cáo, nhóm chọn báo cáo mô hình Decision Tree.
 
 ## Dataset
 Fake and real news dataset (Kaggle): https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset.
@@ -13,10 +15,6 @@ Download dataset và giải nén vào folder `model/dataset`.
 
 ## Model
 ### Summarise
-- Kích thước tập train: 44798 samples.
-- Kích thước tập test: 100 samples (50 random real, 50 random fake).
-- TfidfVectorizer vocabulary size: 121613.
-
 |classifier|accuracy|
 |----------|--------|
 |Gradient Boosting|1.0|
@@ -27,6 +25,10 @@ Download dataset và giải nén vào folder `model/dataset`.
 |Logistic Regression|0.99|
 |Naive Bayes|0.93|
 |K-Nearest Neighbors|0.79|
+
+- Kích thước tập train: 44798 samples.
+- Kích thước tập test: 100 samples (50 random real, 50 random fake).
+- TfidfVectorizer vocabulary size: 121613.
 
 Các tham số của từng mô hình, xem trong notebook `model/model-training.py` hoặc `model/train.py`.
 
