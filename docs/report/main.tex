@@ -46,8 +46,6 @@
 
 \setlength{\headheight}{29.43912pt}
 
-% \graphicspath{PATH_TO_GRAPHIC_FOLDER}
-
 \pagestyle{fancy}
 \lhead{
 Báo cáo Đồ án môn học
@@ -81,15 +79,15 @@ Trường Đại học Khoa học Tự nhiên - ĐHQG HCM\\
 
 \textbf{\large Môn học: \coursename}\\[0.5cm]
 
-\begin{minipage}{0.4\textwidth}
+\begin{minipage}[t]{0.4\textwidth}
 \begin{flushleft} \large
 \emph{Sinh viên thực hiện:}\\
-Trần Hoàng Quân (19120338)
-Nguyễn Văn A \textsc{(19120000)}
+Trần Hoàng Quân (19120338)\\
+Lê Hoàng Trọng Tín \textsc{(19120682)}
 \end{flushleft}
 \end{minipage}
 ~
-\begin{minipage}{0.4\textwidth}
+\begin{minipage}[t]{0.4\textwidth}
 \begin{flushright} \large
 \emph{Giáo viên hướng dẫn:} \\
 % Dr. James \textsc{Smith}
@@ -132,7 +130,7 @@ Thầy Nguyễn Hồng Bửu Long
 \begin{itemize}
 \item Document: ngữ liệu có thể là văn bản, đoạn văn (paragraph), câu văn (sentence) hoặc một phần của câu (sub-sentence).
 \item Feature Extraction: trích xuất các đặc trưng từ ngữ liệu.
-\item Dimensional Reduction: làm giảm số lượng đặc trưng, qua đó làm giảm chi phí tính toán và bộ nhớ sử dụng.
+\item Dimensionality Reduction: làm giảm số lượng đặc trưng, qua đó làm giảm chi phí tính toán và bộ nhớ sử dụng.
 \item Classificaion Model: có thể là một hoặc nhiều classifier (bộ phân lớp) kết hợp để phân loại ngữ liệu.
 \item Evaluation: Prediction và Scoring, đánh giá mô hình dựa trên kết quả phân loại.
 \end{itemize}
@@ -162,7 +160,7 @@ Các bước tiền xử lí bao gồm:
     \label{fig:real_fake_in_train}
 \end{figure}
 
-\subsection{Trích xuất đặc trưng (Feature Extraction) với TF-IDF}
+\subsection{Trích xuất đặc trưng (Feature Extraction)}
 Ta không tiến hành "học thuộc" một câu, mà chỉ học các đặc trưng của câu đó. Có nhiều phương pháp trích xuất đặc trưng: Bag of Words (BoW), TF-IDF, GloVe, Word2Vec, ..etc.
 
 Một ví dụ: Với câu văn \textit{The quick brown fox jumps over the lazy dog}, các features được trích xuất với TF-IDF là \{brown, dog, fox, jumps, lazy, quick\}.
@@ -237,7 +235,7 @@ Tiến hành huấn luyện với các thông số sau:
 \begin{itemize}
 \item Kích thước training dataset: 44798 articles, đã gán nhãn.
 \item Kích thước testing dataset: 100 articles, đã gán nhãn. Đây là 50 article chọn ngẫu nhiên từ tập True \& 50 article chọn ngẫu nhiên từ tập Fake.
-\item Trích xuất đặc trưng: sử dụng \texttt{sklearn.feature\_extraction.text.TfidfVectorizer} với tham số \texttt{stop\_words = 'english'}
+\item Trích xuất đặc trưng: sử dụng \texttt{sklearn.feature\_extraction.text.TfidfVectorizer} với tham số \texttt{stop\_words = 'english'}. Tổng số đặc trưng trích xuất: 121613.
 \item Bộ phân lớp: \texttt{sklearn.tree.DecisionTreeClassifier} với tham số \texttt{criterion = 'entropy'} 
 \end{itemize}
 \begin{figure}[H]
@@ -264,13 +262,12 @@ weighted avg & 1.00 & 1.00 & 1.00 & 100 \\
 Như có thể thấy, độ chính xác của mô hình là gần như tuyệt đối (1.00).
 
 \subsection{Pipeline}
+Ngoài Decision Tree, ứng dụng có dùng một số mô hình khác: Logistic Regression, SGD, Random Forest, Gradient Boosting, k-Nearest Neighbors, Multinomial Naive Bayes và Linear SVM.
+
+Kết quả dự đoán:
 \begin{itemize}
-	\item Ngoài Decision Tree, ứng dụng có dùng một số mô hình khác: Logistic Regression, SGD, Random Forest, Gradient Boosting, k-Nearest Neighbors, Multinomial Naive Bayes và Linear SVM.
-	\item Kết quả dự đoán:
-	\begin{itemize}
-		\item Nếu số lượng \textit{fake} predictions $\geq$ \textit{real} predictions, tin đó là tin \textbf{fake}.
-		\item Nếu số lượng \textit{fake} predictions $<$ \textit{real} predictions, tin đó là tin \textbf{real}.
-	\end{itemize}
+	\item Nếu số lượng \textit{fake} predictions $\geq$ \textit{real} predictions, tin đó là tin \textbf{fake}.
+	\item Nếu số lượng \textit{fake} predictions $<$ \textit{real} predictions, tin đó là tin \textbf{real}.
 \end{itemize}
 \begin{figure}[H]
 	\centering
@@ -309,7 +306,10 @@ Như có thể thấy, độ chính xác của mô hình là gần như tuyệt 
 	\end{tikzpicture}
 	\caption{Fakenews Detection Pipeline}
 \end{figure}
-Ứng dụng sử dụng microframework Flask để deploy trên nền web. Giao diện sử dụng Bootstrap v5.
+
+\subsection{Demo}
+Ứng dụng sử dụng microframework Flask để deploy trên nền web. Giao diện sử dụng Bootstrap v5. Các bước cài đặt như sau:
+
 
 \section{Tổng kết}
 Một số ưu điểm có thể kể đến:
