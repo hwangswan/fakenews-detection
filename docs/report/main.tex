@@ -1,7 +1,6 @@
 \documentclass[12pt]{article}
 
-\usepackage{amsmath}
-\usepackage{amsfonts}
+\usepackage{amsmath, amsfonts, amsthm}
 \usepackage{float}
 \usepackage{fancyhdr}
 \usepackage{graphicx}
@@ -82,7 +81,7 @@ Trường Đại học Khoa học Tự nhiên - ĐHQG HCM\\
 \begin{minipage}[t]{0.4\textwidth}
 \begin{flushleft} \large
 \emph{Sinh viên thực hiện:}\\
-Trần Hoàng Quân (19120338)\\
+Trần Hoàng Quân \textsc{(19120338)}\\
 Lê Hoàng Trọng Tín \textsc{(19120682)}
 \end{flushleft}
 \end{minipage}
@@ -130,7 +129,7 @@ Thầy Nguyễn Hồng Bửu Long
 \begin{itemize}
 \item Document: ngữ liệu có thể là văn bản, đoạn văn (paragraph), câu văn (sentence) hoặc một phần của câu (sub-sentence).
 \item Feature Extraction: trích xuất các đặc trưng từ ngữ liệu.
-\item Dimensionality Reduction: làm giảm số lượng đặc trưng, qua đó làm giảm chi phí tính toán và bộ nhớ sử dụng.
+\item Dimensionality Reduction: làm giảm số lượng đặc trưng bằng các thuật toán như PCA, ICA, LDA, NMF hoặc một số kĩ thuật khác; qua đó làm giảm chi phí tính toán và bộ nhớ sử dụng.
 \item Classificaion Model: có thể là một hoặc nhiều classifier (bộ phân lớp) kết hợp để phân loại ngữ liệu.
 \item Evaluation: Prediction và Scoring, đánh giá mô hình dựa trên kết quả phân loại.
 \end{itemize}
@@ -141,7 +140,19 @@ Tin giả (fake news) đã trở thành mối quan tâm trong những năm gần
 Dựa trên mô hình Cây quyết định (Decision Tree) và một số mô hình học máy khác, nhóm tạo ra một công cụ phân loại tin giả, cho kết quả chính xác ở mức chấp nhận được. Dù kết hợp nhiều mô hình học máy nhưng trọng tâm của nhóm sẽ tìm hiểu, nghiên cứu và phát triển xoay quanh mô hinh Cây quyết định.
 \section{Quá trình xây dựng công cụ}
 \subsection{Dữ liệu}
-Dữ liệu lấy từ Kaggle gồm 44898 bài báo, trích từ các nền tảng nổi tiếng trong năm 2017. \href{https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset}{Đường link đến dataset}.
+Dữ liệu lấy từ Kaggle gồm 44898 bài báo, trích từ các nền tảng nổi tiếng trong năm 2017. \href{https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset}{Đường link đến dataset}. Cấu trúc file dữ liệu bao gồm:
+\begin{itemize}
+\item File \texttt{True.csv} là các article \texttt{True (thật)}.
+\item File \texttt{Fake.csv} là các article \texttt{Fake (giả)}. 
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=.7]{img/quick-glance-at-data.PNG}
+	\caption{Cấu trúc các file \texttt{True.csv}, \texttt{Fake.csv} sau khi parse vào dataframe}
+\end{figure}
+
+
 
 \subsection{Tiền xử lý (Preprocessing)}
 Các bước tiền xử lí bao gồm:
@@ -163,16 +174,32 @@ Các bước tiền xử lí bao gồm:
 \subsection{Trích xuất đặc trưng (Feature Extraction)}
 Ta không tiến hành "học thuộc" một câu, mà chỉ học các đặc trưng của câu đó. Có nhiều phương pháp trích xuất đặc trưng: Bag of Words (BoW), TF-IDF, GloVe, Word2Vec, ..etc.
 
-Một ví dụ: Với câu văn \textit{The quick brown fox jumps over the lazy dog}, các features được trích xuất với TF-IDF là \{brown, dog, fox, jumps, lazy, quick\}.
+\textbf{Một ví dụ} Với câu văn \textit{The quick brown fox jumps over the lazy dog}, các features được trích xuất là \{brown, dog, fox, jumps, lazy, quick\}. Các từ \textit{the, over} là \textit{hư từ} sẽ bị loại bỏ.
 \subsubsection{TF-IDF (Term Frequency - Inverse Document Frequency)}
-Đươc Karen Spärck Jones sáng chế năm 1972\cite{Jones72astatistical}, phương pháp này làm giảm ảnh hưởng những từ thường xuyên xuất hiện trong corpus. Trọng số $W$ của một từ (term) $t$ trong văn bản (document) $d$ được tính như sau:
-$$
+Đươc Karen Spärck Jones giới thiệu năm 1972\cite{Jones72astatistical}, phương pháp này làm giảm ảnh hưởng những từ thường xuyên xuất hiện trong corpus. Trọng số $W$ của một từ (term) $t$ trong văn bản (document) $d$ được tính như sau:
+\begin{equation}\label{eq:tfidf}
 W(d, t) = TF(d, t) \times \log\left(\frac{N}{df(t)}\right)
-$$
+\end{equation}
 Với $N$ là tổng số document, $df(t)$ là tổng số lượng document chứa term $t$, $TF(d, t)$ là số lần xuất hiện của từ $t$ trong document $d$.
 
+\textbf{Một lưu ý}\label{pr:log} $\log$ trong công thức \ref{eq:tfidf} là logarithm tự nhiên\footnote{kí hiệu giáo khoa thường là $\ln$}. Tuy nhiên nhiều tài liệu lại ghi là $\log_2$. Hai khái niệm này bản chất vẫn là nhân cho một hàm $\log$ phù hợp để biểu diễn độ lớn của $df(t)$ so với $N$.
+
+\begin{proof}
+Dùng công thức đổi cơ số $\log$:
+\begin{equation}
+\log_b(a) = \frac{\log_x(a)}{\log_x(b)}
+\end{equation}
+Với $b = e, x = 2$, công thức trở thành
+\begin{equation}
+\ln(a) = \frac{\log_2(a)}{\log_2(e)} \iff \ln(a)\log_2(e) = \log_2(a)
+\end{equation}
+Mà $\log_2(e)$ là một hằng số. Do đó $\ln(a)$ và $\log_2(a)$ chênh lệch nhau một hằng số $\log_2(e)$.
+\end{proof}
+Hiểu nôm na, kết quả $\ln$ chỉ cần nhân hằng số $\log_2(e)$ sẽ thành kết quả $\log_2$. Do đó, sử dụng hàm $\log$ nào không quan trọng.
+
 \subsection{Cây quyết định (Decision Tree)}
-Thuật toán phân lớp sử dụng Cây quyết định (Decision Tree) được Ross Quinlann phát minh năm 1986\cite{DBLP:journals/ml/Quinlan86}, là phương pháp xuất hiện từ rất sớm và rất thành công trong nhiều lĩnh vực của Học máy nói chung và Text Classification nói riêng. Từ 1986 đến nay đã có các phiên bản ID3, ID4.5, ID5.0, CART.\footnote{\texttt{sklearn.tree.DecisionTreeClassifier} sử dụng phiên bản customise của thuật toán CART.\cite{scikit-learn}}
+\subsubsection{Giới thiệu về Cây quyết định}
+Thuật toán phân lớp sử dụng Cây quyết định (Decision Tree) được Ross Quinlann giới thiệu năm 1986\cite{DBLP:journals/ml/Quinlan86}, là phương pháp xuất hiện từ rất sớm và rất thành công trong nhiều lĩnh vực của Học máy nói chung và Text Classification nói riêng. Từ 1986 đến nay đã có các phiên bản ID3, ID4.5, ID5.0, CART.\footnote{\texttt{sklearn.tree.DecisionTreeClassifier} sử dụng phiên bản customise của thuật toán CART.\cite{scikit-learn}}
 
 Ý tưởng của thuật toán là tạo một cấu trúc dữ liệu cây, mỗi nút lá là một thuộc tính của tập dữ liệu đã phân lớp; mỗi nút không phải nút lá biểu thị một phép thử với một thuộc tính; mỗi nhánh biểu thị kết quả của phép thử. Ví dụ một cây quyết định và tập dữ liệu phân lớp:
 \begin{figure}[H]
@@ -204,29 +231,43 @@ child { node [outcome] { Ở nhà } };
 
 \subsubsection{Lựa chọn đặc trưng (Feature Selection) với độ đo Information Gains}
 Gọi $\mathbf{p} = (p_1, p_2, .., p_n)$ là phân phối sao cho biến ngẫu nhiên $x$ nhận $n$ giá trị $(x_1, x_2, .., x_n)$ và xác suất lần lượt là $(p_1, p_2, .., p_n)$. Hàm số Entropy $H(\mathbf{p})$ được định nghĩa như sau:
-$$
+\begin{equation}
 H(\mathbf{p}) = -\sum_{i = 1}^n p_i \log(p_i)
-$$
-Ví dụ: một tập dữ liệu có $p$ mẫu được gán nhãn \textit{positive} và $n$ mẫu được gán nhãn \textit{negative}. Khi đó entropy $H(\frac{p}{n + p}, \frac{n}{n + p})$ được tính như sau:
+\end{equation}
+
+Như đã nói ở chứng minh \ref{pr:log}, $\log$ ở đây có thể là $\log_2$ hoặc $\ln$ đều được.
+
+\textbf{Một ví dụ} một tập dữ liệu có $p$ mẫu được gán nhãn \textit{positive} và $n$ mẫu được gán nhãn \textit{negative}. Khi đó entropy $H(\frac{p}{n + p}, \frac{n}{n + p})$ được tính như sau:
 $$
 H\left(\frac{p}{n + p}, \frac{n}{n + p}\right) = -\frac{p}{n + p}\log\left(\frac{p}{n + p}\right) - \frac{n}{n + p}\log\left(\frac{n}{n + p}\right)
 $$
 Chọn thuộc tính $A$ có $k$ giá trị khác nhau, chia tập train $E$ thành $k$ tập con $\{E_1, E_2, .., E_k\}$. \textbf{Entropy kỳ vọng (EH)} còn lại sau khi chọn $A$ là một nút được tính như sau:
-$$
+\begin{equation}
 EH(A) = \sum_{i = 1}^{n}\left(\frac{p_i + n_i}{p + n}\right)H\left(\frac{p_i}{n_i + p_i}, \frac{n_i}{n_i + p_i}\right)
-$$
+\end{equation}
 Khi đó độ đo Information Gains của thuộc tính $A$ là hiệu của \textbf{Entropy} và \textbf{Entropy kỳ vọng}:
-$$
+\begin{equation}
 A(I) = H\left(\frac{p}{n + p}, \frac{n}{n + p}\right) - EH(A) 
-$$
+\end{equation}
 Ta sẽ chọn thuộc tính nào có Information Gains lớn nhất làm nút cha.
 
-\subsubsection{Lựa chọn đặc trưng (Feature Selection) với độ đo Gini Index}
+\subsubsection{Lựa chọn đặc trưng (Feature Selection) với độ đo Gini Index (Gini Impurity)}
 Gini Index được tính toán như sau:
-$$
+\begin{equation}\label{eq:gini}
 \text{Gini} = 1 - \sum_{i = 1}^n p_i ^ 2
-$$
+\end{equation}
 Khác với Entropy, ta chọn thuộc tính có Gini Index nhỏ nhất làm nút cha, sau đó tính toán Gini Index với các nút còn lại.
+
+\subsubsection{Ý nghĩa các độ đo}
+Độ đo Information Gains thể hiện lượng thông tin có được khi chọn một thuộc tính làm phép thử. Ngược lại, Gini Index thể hiện sự "tinh khiết"\footnote{impurity} của thông tin. Khi một thuộc tính có dữ liệu thuộc hoàn toàn về một lớp, ta có vài nhận xét sau:
+\begin{itemize}
+\item $A(I)$ của thuộc tính đó bằng 1.
+\item Gini của thuộc tính đó bằng 0.
+\begin{proof}
+Khi một thuộc tính có dữ liệu hoàn toàn thuộc về một lớp, $\exists i \in [1, n]$ sao cho $p_i = 1$. Hệ quả là tổng $\displaystyle \sum_{i = 1}^{n} (p_i)^2 = 1$ và khi đó theo công thức \ref{eq:gini}, Gini = 0.
+\end{proof}
+\end{itemize}
+
 
 \section{Huấn luyện, Kiểm thử và Triển khai}
 
@@ -312,6 +353,7 @@ Kết quả dự đoán:
 
 
 \section{Tổng kết}
+\subsection{Nhận xét}
 Một số ưu điểm có thể kể đến:
 \begin{itemize}
 \item Các thuật toán dùng trong đề tài là các thuật toán phổ biến, dễ cài đặt.
@@ -324,6 +366,9 @@ Tuy nhiên, đi kèm là một số khuyết điểm:
 \item Xáo trộn dữ liệu có thể dẫn đến kết quả bị sai khác.\cite{Kowsari_2019}
 \end{itemize}
 Với sản phẩm hoàn chỉnh, bạn đọc có thể xem tại \href{https://github.com/trhgquan/fakenews-detection}{GitHub Repository}.
+
+\subsection{Các hướng phát triển xa hơn}
+Với những ưu / khuyết điểm đã nêu trên, r
 
 \cleardoublepage
 \phantomsection
