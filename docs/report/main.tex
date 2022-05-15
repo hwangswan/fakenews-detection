@@ -129,7 +129,7 @@ Thầy Nguyễn Hồng Bửu Long
 \begin{itemize}
 \item Document: ngữ liệu có thể là văn bản, đoạn văn (paragraph), câu văn (sentence) hoặc một phần của câu (sub-sentence).
 \item Feature Extraction: trích xuất các đặc trưng từ ngữ liệu.
-\item Dimensionality Reduction: làm giảm số lượng đặc trưng bằng các thuật toán như PCA, ICA, LDA, NMF hoặc một số kĩ thuật khác; qua đó làm giảm chi phí tính toán và bộ nhớ sử dụng.
+\item Dimensionality Reduction: làm giảm số lượng đặc trưng bằng các thuật toán như PCA, ICA, LDA, NMF hoặc một số kĩ thuật khác\cite{Kowsari_2019}; qua đó làm giảm chi phí tính toán và bộ nhớ sử dụng.
 \item Classificaion Model: có thể là một hoặc nhiều classifier (bộ phân lớp) kết hợp để phân loại ngữ liệu.
 \item Evaluation: Prediction và Scoring, đánh giá mô hình dựa trên kết quả phân loại.
 \end{itemize}
@@ -151,8 +151,10 @@ Dữ liệu lấy từ Kaggle gồm 44898 bài báo, trích từ các nền tả
 	\includegraphics[scale=.7]{img/quick-glance-at-data.PNG}
 	\caption{Cấu trúc các file \texttt{True.csv}, \texttt{Fake.csv} sau khi parse vào dataframe}
 \end{figure}
-
-
+Ta tiến hành thực hiện các thao tác:
+\begin{itemize}
+\item Mục tiêu của bài toán là phân lớp dựa trên \textbf{nội dung} của article, nên ta tạm thời drop các cột \texttt{title, subject, date}. 
+\end{itemize}
 
 \subsection{Tiền xử lý (Preprocessing)}
 Các bước tiền xử lí bao gồm:
@@ -264,24 +266,28 @@ Khác với Entropy, ta chọn thuộc tính có Gini Index nhỏ nhất làm n�
 \item $A(I)$ của thuộc tính đó bằng 1.
 \item Gini của thuộc tính đó bằng 0.
 \begin{proof}
-Khi một thuộc tính có dữ liệu hoàn toàn thuộc về một lớp, $\exists i \in [1, n]$ sao cho $p_i = 1$. Hệ quả là tổng $\displaystyle \sum_{i = 1}^{n} (p_i)^2 = 1$ và khi đó theo công thức \ref{eq:gini}, Gini = 0.
+Khi một thuộc tính có dữ liệu hoàn toàn thuộc về một lớp, $\exists i \in [1, n]$ sao cho $p_i = 1$. Hệ quả là $\displaystyle \sum_{i = 1}^{n} p_i^2 = 1$ và khi đó theo công thức \ref{eq:gini}, Gini = 0.
 \end{proof}
 \end{itemize}
 
 
 \section{Huấn luyện, Kiểm thử và Triển khai}
-
-\subsection{Huấn luyện \& Kiểm thử}
-Tiến hành huấn luyện với các thông số sau:
+Các mô hình được huấn luyện với bộ dataset như sau:
 \begin{itemize}
-\item Kích thước training dataset: 44798 articles, đã gán nhãn.
-\item Kích thước testing dataset: 100 articles, đã gán nhãn. Đây là 50 article chọn ngẫu nhiên từ tập True \& 50 article chọn ngẫu nhiên từ tập Fake.
-\item Trích xuất đặc trưng: sử dụng \texttt{sklearn.feature\_extraction.text.TfidfVectorizer} với tham số \texttt{stop\_words = 'english'}. Tổng số đặc trưng trích xuất: 121613.
-\item Bộ phân lớp: \texttt{sklearn.tree.DecisionTreeClassifier} với tham số \texttt{criterion = 'entropy'} 
+	\item Kích thước training dataset: 44798 articles, đã gán nhãn.
+	\item Kích thước testing dataset: 100 articles, đã gán nhãn. Đây là 50 article chọn ngẫu nhiên từ tập True \& 50 article chọn ngẫu nhiên từ tập Fake.
+	\item Trích xuất đặc trưng: sử dụng \texttt{sklearn.feature\_extraction.text.TfidfVectorizer} với tham số \texttt{stop\_words = 'english'}. Tổng số đặc trưng trích xuất: 121613.
+\end{itemize}
+\subsection{Huấn luyện \& Kiểm thử các mô hình}
+\subsubsection{Decision Tree}
+Tiến hành huấn luyện mô hình Decision Tree với các thông số sau:
+\begin{itemize}
+	\item Bộ phân lớp: \texttt{sklearn.tree.DecisionTreeClassifier}
+	\item Tham số \texttt{criterion = 'entropy'} 
 \end{itemize}
 \begin{figure}[H]
 \begin{multicols}{2}
-\includegraphics[scale=.5]{img/train-result.png}
+\includegraphics[scale=.5]{img/train-dt-result.png}
 
 \begin{table}[H]
 \begin{tabular}{l l l l l}
@@ -298,14 +304,43 @@ weighted avg & 1.00 & 1.00 & 1.00 & 100 \\
 \end{table}
 \end{multicols}
 \label{fig:heatmap_testing}
-\caption{Heatmap và \texttt{classification\_report} sau khi train}
+\caption{Heatmap và \texttt{classification\_report} của \texttt{sklearn.tree.DecisionTreeClassifier}}
 \end{figure}
 Như có thể thấy, độ chính xác của mô hình là gần như tuyệt đối (1.00).
 
-\subsection{Pipeline}
-Ngoài Decision Tree, ứng dụng có dùng một số mô hình khác: Logistic Regression, SGD, Random Forest, Gradient Boosting, k-Nearest Neighbors, Multinomial Naive Bayes và Linear SVM.
+\subsubsection{Logistic Regression}
+Bài toán Hồi quy (Regression) thường áp dụng cho tập nhãn liên tục, tuy nhiên ở đây ta vẫn dùng được cho tập nhãn rời rạc với hai nhãn $\{0, 1\}$. Cụ thể, hàm Logistic là một dạng hàm sigmoid, nhận đầu vào là một số $x$ và cho đầu ra là 0 hoặc 1, đúng như ý đồ mà chúng ta hướng tới: cho ra kết quả 0 (fake) hoặc 1 (true).
 
-Kết quả dự đoán:
+Tiến hành huấn luyện mô hình với \texttt{sklearn.linear\_model.LogisticRegression}, dùng các tham số mặc định. 
+\begin{figure}[H]
+	\begin{multicols}{2}
+		\includegraphics[scale=.5]{img/train-lr-result.png}
+		
+		\begin{table}[H]
+			\begin{tabular}{l l l l l}
+				\hline
+				& precision & recall & f1-score & support \\
+				\hline
+				0 & 0.98 & 1.00 & 0.99 & 50 \\
+				1 & 1.00 & 0.98 & 0.99 & 50 \\
+				accuracy &   &   & 0.99 & 100 \\
+				macro avg & 0.99 & 0.99 & 0.99 & 100 \\
+				weighted avg & 0.99 & 0.99 & 0.99 & 100 \\
+				\hline
+			\end{tabular}
+		\end{table}
+	\end{multicols}
+	\caption{Kết quả train và \texttt{classification\_report} của \texttt{sklearn.linear\_model.LogisticRegression}}
+\end{figure}
+\subsubsection{Stochastic Gradient Descent (SGD)}
+\subsubsection{Random Forest}
+\subsubsection{Gradient Boosting}
+\subsubsection{k-Nearest Neighbors}
+\subsubsection{Multinomial Na\"{\i}ve Bayes}
+\subsubsection{Linear Support Vector Classifier (Linear SVC)}
+
+\subsection{Pipeline}
+Các mô hình sẽ cùng đưa ra dự đoán cho một tập đặc trưng được trích xuất từ ngữ liệu đầu vào. Kết quả dự đoán được tổng hợp lại, và kết quả dự đoán cuối cùng được đưa ra như sau:
 \begin{itemize}
 	\item Nếu số lượng \textit{fake} predictions $\geq$ \textit{real} predictions, tin đó là tin \textbf{fake}.
 	\item Nếu số lượng \textit{fake} predictions $<$ \textit{real} predictions, tin đó là tin \textbf{real}.
