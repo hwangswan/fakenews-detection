@@ -149,14 +149,25 @@ Dữ liệu lấy từ Kaggle gồm 44898 bài báo, trích từ các nền tả
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=.7]{img/quick-glance-at-data.PNG}
+	\includegraphics[scale=.75]{img/quick-glance-at-data.PNG}
 	\caption{Cấu trúc các file \texttt{True.csv}, \texttt{Fake.csv} sau khi parse vào dataframe}
 \end{figure}
 Ta tiến hành thực hiện các thao tác:
 \begin{itemize}
 \item Mục tiêu của bài toán là phân lớp dựa trên \textbf{nội dung} của article, nên ta tạm thời drop các cột \texttt{title, subject, date}.
-%TODO: more steps here.
+\item Thêm cột \texttt{class} để nhận biết tin thật và tin giả.
+\item Chia ngẫu nhiên dữ liệu thành tập \texttt{train.csv} và \texttt{test.csv}.
 \end{itemize}
+Sau bước này, nội dung \texttt{train.csv} và \texttt{test.csv} sẽ như hình dưới:
+\begin{figure}[H]
+\begin{multicols}{2}
+\includegraphics[scale=.7]{img/train-csv.PNG}
+
+\includegraphics[scale=.7]{img/test-csv.PNG}
+\end{multicols}
+\caption{Tập train.csv (trái) và test.csv (phải)}
+\label{fig:trainandtestcsv}
+\end{figure}
 
 \subsection{Tiền xử lý (Preprocessing)}
 Các bước tiền xử lí bao gồm:
@@ -166,14 +177,8 @@ Các bước tiền xử lí bao gồm:
 \item Loại bỏ số, vì số liệu thường gây "nhiễu" trong quá trình phân loại.
 \item Loại bỏ hyperlinks, html tags và các kí tự đặc biệt.
 \item Loại bỏ stopwords, trong trường hợp này là stopwords tiếng Anh.
-\item Thêm class để nhận biết tin thật và tin giả.
 \end{itemize}
-\begin{figure}[H]
-    \centering
-    \includegraphics[scale=.8]{img/data-summerise.png}
-    \caption{Tương quan các lớp fake (0) và real (1) trong dataset}
-    \label{fig:real_fake_in_train}
-\end{figure}
+
 %TODO: example before and after here.
 
 \subsection{Trích xuất đặc trưng (Feature Extraction)}
@@ -282,12 +287,21 @@ Các mô hình được huấn luyện với bộ dataset có miêu tả như sa
 	\item Kích thước testing dataset: 100 articles, đã gán nhãn. Đây là 50 article chọn ngẫu nhiên từ tập True \& 50 article chọn ngẫu nhiên từ tập Fake.
 	\item Trích xuất đặc trưng: sử dụng \texttt{sklearn.feature\_extraction.text.TfidfVectorizer} với tham số \texttt{stop\_words = 'english'}. Tổng số đặc trưng trích xuất: 121613.
 \end{itemize}
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=.8]{img/data-summerise.png}
+	\caption{Tương quan các lớp fake (0) và real (1) trong dataset}
+	\label{fig:real_fake_in_train}
+\end{figure}
+
 \subsection{Huấn luyện \& Kiểm thử các mô hình}
 \subsubsection{Decision Tree}
 Tiến hành huấn luyện mô hình với bộ phân lớp: \texttt{sklearn.tree.DecisionTreeClassifier}, sử dụng các tham số:
 \begin{itemize} 
-	\item \texttt{criterion}: entropy 
+	\item \texttt{criterion}: entropy
+	\item \texttt{random\_state}: 42
 \end{itemize}
+Kết quả huấn luyện như hình dưới:
 \begin{figure}[H]
 \begin{multicols}{2}
 \includegraphics[scale=.5]{img/train-dt-result.png}
@@ -310,31 +324,6 @@ weighted avg & 1.00 & 1.00 & 1.00 & 100 \\
 \caption{Heatmap và \texttt{classification\_report} của \texttt{sklearn.tree.DecisionTreeClassifier}}
 \end{figure}
 
-\subsubsection{Logistic Regression}
-Bài toán Hồi quy (Regression) thường áp dụng cho tập nhãn liên tục, tuy nhiên ở đây ta vẫn dùng được cho tập nhãn rời rạc với hai nhãn $\{0, 1\}$. Cụ thể, hàm Logistic trong Logistic Regression là một dạng hàm sigmoid, nhận đầu vào là một số $x$ và cho đầu ra là 0 hoặc 1, đúng như ý đồ mà chúng ta hướng tới: cho ra kết quả 0 (fake) hoặc 1 (true).
-
-Tiến hành huấn luyện mô hình với bộ phân lớp \texttt{sklearn.linear\_model.LogisticRegression}, dùng các tham số mặc định. 
-\begin{figure}[H]
-	\begin{multicols}{2}
-		\includegraphics[scale=.5]{img/train-lr-result.png}
-		
-		\begin{table}[H]
-			\begin{tabular}{l l l l l}
-				\hline
-				& precision & recall & f1-score & support \\
-				\hline
-				0 & 0.98 & 1.00 & 0.99 & 50 \\
-				1 & 1.00 & 0.98 & 0.99 & 50 \\
-				accuracy &   &   & 0.99 & 100 \\
-				macro avg & 0.99 & 0.99 & 0.99 & 100 \\
-				weighted avg & 0.99 & 0.99 & 0.99 & 100 \\
-				\hline
-			\end{tabular}
-		\end{table}
-	\end{multicols}
-	\caption{Kết quả train và \texttt{classification\_report} của \texttt{sklearn.linear\_model.LogisticRegression}}
-\end{figure}
-\subsubsection{Stochastic Gradient Descent (SGD)}
 
 \subsubsection{Random Forest}
 Random Forest tạo ra một \textit{rừng} gồm có $t$ Decision Tree, sau đó tổng hợp (ensemble) và đưa ra dự đoán dựa trên bầu chọn (voting) kết quả.
@@ -343,7 +332,9 @@ Tiến hành huấn luyện mô hình với bộ phân lớp \texttt{sklearn.ens
 \begin{itemize}
 \item \texttt{n\_estimators} (số cây - $t$): 100 (mặc định)
 \item \texttt{criterion}: entropy
+\item \texttt{random\_state}: 42
 \end{itemize}
+ Kết quả huấn luyện như hình dưới:
 
 \begin{figure}[H]
 	\begin{multicols}{2}
@@ -369,7 +360,11 @@ Tiến hành huấn luyện mô hình với bộ phân lớp \texttt{sklearn.ens
 \subsubsection{Gradient Boosting}
 Phương pháp này dựa trên kết quả của nhiều mô hình học yếu (cụ thể ở đây là cây hồi quy - regression tree), sau đó tiến hành học và đưa ra kết quả dựa trên các kết quả này. Đặc điểm của phương pháp này là cho ra mô hình có độ chính xác cao hơn, sử dụng nhiều tham số hơn Random Forest.
 
-Tiến hành huấn luyện mô hình với bộ phân lớp \texttt{sklearn.ensemble.GradientBoostingClassifier}, dùng các tham số mặc định.
+Tiến hành huấn luyện mô hình với bộ phân lớp \texttt{sklearn.ensemble.GradientBoostingClassifier}, dùng các tham số:
+\begin{itemize}
+\item \texttt{random\_state}: 42
+\end{itemize}
+Kết quả huấn luyện như hình dưới:
 \begin{figure}[H]
 	\begin{multicols}{2}
 		\includegraphics[scale=.5]{img/train-gb-result.png}
@@ -396,8 +391,10 @@ Tiến hành huấn luyện mô hình với bộ phân lớp \texttt{sklearn.ens
 
 Tiến hành huấn luyện mô hình với bộ phân lớp \texttt{sklearn.ensemble.KNeighborsClassifier}, dùng các tham số sau:
 \begin{itemize}
+\item \texttt{n\_neighbors ($k$)}: 1
 \item \texttt{weights}: distance, đánh giá dựa trên khoảng cách.
 \end{itemize}
+Kết quả huấn luyện như hình dưới:
 \begin{figure}[H]
 	\begin{multicols}{2}
 		\includegraphics[scale=.5]{img/train-knn-result.png}
@@ -420,9 +417,112 @@ Tiến hành huấn luyện mô hình với bộ phân lớp \texttt{sklearn.ens
 \end{figure}
 
 \subsubsection{Multinomial Na\"{\i}ve Bayes}
-Khác với mô hình Na\"{\i}ve Bayes truyền thống, Multinomial Na\"{\i}ve Bayes
+Khác với mô hình Na\"{\i}ve Bayes truyền thống, Multinomial Na\"{\i}ve Bayes có phân phối xác suất $\mathbf{p} = (p_1, p_2, .., p_n)$ tuân theo phân phối đa thức (Multinomial Distribution).
+
+Tiến hành huấn luyện mô hình với bộ phân lớp \texttt{sklearn.naive\_bayes.MultinomialNB}, sử dụng các tham số mặc định. Kết quả huấn luyện như hình dưới:
+\begin{figure}[H]
+	\begin{multicols}{2}
+		\includegraphics[scale=.5]{img/train-mnb-result.png}
+		
+		\begin{table}[H]
+			\begin{tabular}{l l l l l}
+				\hline
+				& precision & recall & f1-score & support \\
+				\hline
+				0 & 0.98 & 0.88 & 0.93 & 50 \\
+				1 & 0.89 & 0.98 & 0.93 & 50 \\
+				accuracy &   &   & 0.93 & 100 \\
+				macro avg & 0.93 & 0.93 & 0.93 & 100 \\
+				weighted avg & 0.93 & 0.93 & 0.93 & 100 \\
+				\hline
+			\end{tabular}
+		\end{table}
+	\end{multicols}
+	\caption{Kết quả train và \texttt{classification\_report} của \texttt{sklearn.naive\_bayes.MultinomialNB}}
+\end{figure}
+
+\subsubsection{Logistic Regression}
+Bài toán Hồi quy (Regression) thường áp dụng cho tập nhãn liên tục, tuy nhiên ở đây ta vẫn dùng được cho tập nhãn rời rạc với hai nhãn $\{0, 1\}$. Cụ thể, hàm Logistic trong Logistic Regression là một dạng hàm sigmoid nhận đầu vào là một số $x$ và cho đầu ra là 0 hoặc 1, đúng như ý đồ mà chúng ta hướng tới: cho ra kết quả 0 (fake) hoặc 1 (true).
+
+Tiến hành huấn luyện mô hình với bộ phân lớp \texttt{sklearn.linear\_model.LogisticRegression}, dùng các tham số mặc định. Kết quả huấn luyện như hình dưới:
+\begin{figure}[H]
+	\begin{multicols}{2}
+		\includegraphics[scale=.5]{img/train-lr-result.png}
+		
+		\begin{table}[H]
+			\begin{tabular}{l l l l l}
+				\hline
+				& precision & recall & f1-score & support \\
+				\hline
+				0 & 0.98 & 1.00 & 0.99 & 50 \\
+				1 & 1.00 & 0.98 & 0.99 & 50 \\
+				accuracy &   &   & 0.99 & 100 \\
+				macro avg & 0.99 & 0.99 & 0.99 & 100 \\
+				weighted avg & 0.99 & 0.99 & 0.99 & 100 \\
+				\hline
+			\end{tabular}
+		\end{table}
+	\end{multicols}
+	\caption{Kết quả train và \texttt{classification\_report} của \texttt{sklearn.linear\_model.LogisticRegression}}
+\end{figure}
 
 \subsubsection{Linear Support Vector Classifier (Linear SVC)}
+Thuật toán Support Vector Machine (SVM) là thuật toán ứng dụng hiệu quả trong bài toán phân lớp, đặc biệt là bài toán phân lớp nhị phân - đúng theo ý đồ ban đầu với tập nhãn \{0, 1\}.
+
+Tiến hành huấn luyện mô hình với bộ phân lớp \texttt{sklearn.svm.LinearSVC}, dùng các tham số:
+\begin{itemize}
+\item \texttt{random\_state}: 42
+\end{itemize}
+Kết quả huấn luyện như hình dưới:
+\begin{figure}[H]
+	\begin{multicols}{2}
+		\includegraphics[scale=.5]{img/train-lsvc-result.png}
+		
+		\begin{table}[H]
+			\begin{tabular}{l l l l l}
+				\hline
+				& precision & recall & f1-score & support \\
+				\hline
+				0 & 0.98 & 1.00 & 0.99 & 50 \\
+				1 & 1.00 & 0.98 & 0.99 & 50 \\
+				accuracy &   &   & 0.99 & 100 \\
+				macro avg & 0.99 & 0.99 & 0.99 & 100 \\
+				weighted avg & 0.99 & 0.99 & 0.99 & 100 \\
+				\hline
+			\end{tabular}
+		\end{table}
+	\end{multicols}
+	\caption{Kết quả train và \texttt{classification\_report} của \texttt{sklearn.svm.LinearSVC}}
+\end{figure}
+
+\subsubsection{Stochastic Gradient Descent (SGD)}
+Thuật toán Stochastic Gradent Descent là một biến thể của Gradient Descent. Nội dung của hai thuật toán này để dành cho bạn đọc tìm hiểu thêm.
+
+Tiến hành huấn luyện mô hình với bộ phân lớp \texttt{sklearn.linear\_model.SGDClassifier}, dùng các tham số:
+\begin{itemize}
+	\item \texttt{random\_state}: 42
+\end{itemize}
+Kết quả huấn luyện như hình dưới:
+\begin{figure}[H]
+	\begin{multicols}{2}
+		\includegraphics[scale=.5]{img/train-sgd-result.png}
+		
+		\begin{table}[H]
+			\begin{tabular}{l l l l l}
+				\hline
+				& precision & recall & f1-score & support \\
+				\hline
+				0 & 0.98 & 1.00 & 0.99 & 50 \\
+				1 & 1.00 & 0.98 & 0.99 & 50 \\
+				accuracy &   &   & 0.99 & 100 \\
+				macro avg & 0.99 & 0.99 & 0.99 & 100 \\
+				weighted avg & 0.99 & 0.99 & 0.99 & 100 \\
+				\hline
+			\end{tabular}
+		\end{table}
+	\end{multicols}
+	\caption{Kết quả train và \texttt{classification\_report} của \texttt{sklearn.linear\_model.SGDClassifier}}
+\end{figure}
 
 \subsection{Pipeline}
 Các mô hình sẽ cùng đưa ra dự đoán cho một tập đặc trưng được trích xuất từ ngữ liệu đầu vào. Kết quả dự đoán được tổng hợp lại, và kết quả dự đoán cuối cùng được đưa ra như sau:
