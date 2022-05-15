@@ -55,7 +55,7 @@ Trường Đại học Khoa học Tự nhiên - ĐHQG HCM\\
 }
 \lfoot{\LaTeX\ by \href{https://github.com/trhgquan}{Quan, Tran Hoang}}
 
-\newcommand{\coursename}{CSC15008 - Xử lý ngôn ngữ tự nhiên ứng dụng}
+\newcommand{\coursename}{CSC15008 - Xử lí ngôn ngữ tự nhiên ứng dụng}
 \newcommand{\reportname}{Ứng dụng Decision Tree xây dựng công cụ Fakenews Detection}
 
 \begin{document}
@@ -140,8 +140,8 @@ Tin giả (fake news) đã trở thành mối quan tâm trong những năm gần
 Dựa trên mô hình Cây quyết định (Decision Tree) và một số mô hình học máy khác, nhóm tạo ra một công cụ phân loại tin giả, cho kết quả chính xác ở mức chấp nhận được. Dù kết hợp nhiều mô hình học máy nhưng trọng tâm của nhóm sẽ tìm hiểu, nghiên cứu và phát triển xoay quanh mô hinh Cây quyết định.
 
 \section{Các buớc thực hiện}
-\subsection{Dữ liệu}
-Dữ liệu lấy từ Kaggle gồm 44898 bài báo, trích từ các nền tảng nổi tiếng trong năm 2017. \href{https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset}{Đường link đến dataset}. Cấu trúc file dữ liệu bao gồm:
+\subsection{Ngữ liệu}
+Ngữ liệu lấy từ Kaggle gồm 44898 bài báo, trích từ các nền tảng nổi tiếng trong năm 2017. \href{https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset}{Đường link đến dataset}. Cấu trúc file ngữ liệu bao gồm:
 \begin{itemize}
 \item File \texttt{True.csv} là các article \texttt{True (thật)}.
 \item File \texttt{Fake.csv} là các article \texttt{Fake (giả)}. 
@@ -169,7 +169,7 @@ Sau bước này, nội dung \texttt{train.csv} và \texttt{test.csv} sẽ như 
 \label{fig:trainandtestcsv}
 \end{figure}
 
-\subsection{Tiền xử lý (Preprocessing)}
+\subsection{Tiền xử lí (Preprocessing)}
 Các bước tiền xử lí bao gồm:
 \begin{itemize}
 \item Chuyển câu về dạng chữ thường
@@ -179,7 +179,16 @@ Các bước tiền xử lí bao gồm:
 \item Loại bỏ stopwords, trong trường hợp này là stopwords tiếng Anh.
 \end{itemize}
 
-%TODO: example before and after here.
+Một ví dụ cho ngữ liệu trước và sau bước tiền xử lí:
+\begin{multicols}{2}
+\textbf{Trước}
+
+LONDON (Reuters) - Abdul Daoud spilt most of the cappuccino into the saucer the first time he served Princess Diana, his nerves getting the better of him. Almost 20 years on since she was killed when her car crashed in a Paris tunnel, he still works surrounded by pictures of the woman he calls "the princess of the people" in his cafe, named Diana, his very personal attempt to keep her memory alive.
+
+\textbf{Sau}
+
+london  reuters    abdul daoud spilt most of the cappuccino into the saucer the first time he served princess diana  his nerves getting the better of him  almost  years on since she was killed when her car crashed in a paris tunnel  he still works surrounded by pictures of the woman he calls  the princess of the people  in his cafe  named diana  his very personal attempt to keep her memory alive 
+\end{multicols}
 
 \subsection{Trích xuất đặc trưng (Feature Extraction)}
 Ta không tiến hành "học thuộc" một câu, mà chỉ học các đặc trưng của câu đó. Có nhiều phương pháp trích xuất đặc trưng: Bag of Words (BoW), TF-IDF, GloVe, Word2Vec, ..etc.
@@ -583,6 +592,7 @@ Một số ưu điểm có thể kể đến:
 Tuy nhiên, đi kèm là một số khuyết điểm:
 \begin{itemize}
 \item Một số mô hình rất dễ bị overfit.
+\item Một số mô hình cần thời gian huấn luyện lâu hơn (e.g các thuật toán ensemble: Gradient Boosting, Random Forest).
 \item Xáo trộn dữ liệu có thể dẫn đến kết quả bị sai khác.\cite{Kowsari_2019}
 \end{itemize}
 Với sản phẩm hoàn chỉnh, bạn đọc có thể xem tại \href{https://github.com/trhgquan/fakenews-detection}{GitHub Repository}.
