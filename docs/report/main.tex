@@ -138,7 +138,8 @@ Thầy Nguyễn Hồng Bửu Long
 Tin giả (fake news) đã trở thành mối quan tâm trong những năm gần đây. Nhiều hệ thống phân loại tin giả đã được xây dựng và hoạt động rất tốt, dựa trên các mô hình học máy phổ biến.
 
 Dựa trên mô hình Cây quyết định (Decision Tree) và một số mô hình học máy khác, nhóm tạo ra một công cụ phân loại tin giả, cho kết quả chính xác ở mức chấp nhận được. Dù kết hợp nhiều mô hình học máy nhưng trọng tâm của nhóm sẽ tìm hiểu, nghiên cứu và phát triển xoay quanh mô hinh Cây quyết định.
-\section{Quá trình xây dựng công cụ}
+
+\section{Các buớc thực hiện}
 \subsection{Dữ liệu}
 Dữ liệu lấy từ Kaggle gồm 44898 bài báo, trích từ các nền tảng nổi tiếng trong năm 2017. \href{https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset}{Đường link đến dataset}. Cấu trúc file dữ liệu bao gồm:
 \begin{itemize}
@@ -153,7 +154,8 @@ Dữ liệu lấy từ Kaggle gồm 44898 bài báo, trích từ các nền tả
 \end{figure}
 Ta tiến hành thực hiện các thao tác:
 \begin{itemize}
-\item Mục tiêu của bài toán là phân lớp dựa trên \textbf{nội dung} của article, nên ta tạm thời drop các cột \texttt{title, subject, date}. 
+\item Mục tiêu của bài toán là phân lớp dựa trên \textbf{nội dung} của article, nên ta tạm thời drop các cột \texttt{title, subject, date}.
+%TODO: more steps here.
 \end{itemize}
 
 \subsection{Tiền xử lý (Preprocessing)}
@@ -172,11 +174,12 @@ Các bước tiền xử lí bao gồm:
     \caption{Tương quan các lớp fake (0) và real (1) trong dataset}
     \label{fig:real_fake_in_train}
 \end{figure}
+%TODO: example before and after here.
 
 \subsection{Trích xuất đặc trưng (Feature Extraction)}
 Ta không tiến hành "học thuộc" một câu, mà chỉ học các đặc trưng của câu đó. Có nhiều phương pháp trích xuất đặc trưng: Bag of Words (BoW), TF-IDF, GloVe, Word2Vec, ..etc.
 
-\textbf{Một ví dụ} Với câu văn \textit{The quick brown fox jumps over the lazy dog}, các features được trích xuất là \{brown, dog, fox, jumps, lazy, quick\}. Các từ \textit{the, over} là \textit{hư từ} sẽ bị loại bỏ.
+\textbf{Một ví dụ:} Với câu văn \textit{The quick brown fox jumps over the lazy dog}, các features được trích xuất là \{brown, dog, fox, jumps, lazy, quick\}. Các từ \textit{the, over} là \textit{hư từ} sẽ bị loại bỏ.
 \subsubsection{TF-IDF (Term Frequency - Inverse Document Frequency)}
 Đươc Karen Spärck Jones giới thiệu năm 1972\cite{Jones72astatistical}, phương pháp này làm giảm ảnh hưởng những từ thường xuyên xuất hiện trong corpus. Trọng số $W$ của một từ (term) $t$ trong văn bản (document) $d$ được tính như sau:
 \begin{equation}\label{eq:tfidf}
@@ -184,7 +187,7 @@ W(d, t) = TF(d, t) \times \log\left(\frac{N}{df(t)}\right)
 \end{equation}
 Với $N$ là tổng số document, $df(t)$ là tổng số lượng document chứa term $t$, $TF(d, t)$ là số lần xuất hiện của từ $t$ trong document $d$.
 
-\textbf{Một lưu ý}\label{pr:log} $\log$ trong công thức \ref{eq:tfidf} là logarithm tự nhiên\footnote{kí hiệu giáo khoa thường là $\ln$}. Tuy nhiên nhiều tài liệu lại ghi là $\log_2$. Hai khái niệm này bản chất vẫn là nhân cho một hàm $\log$ phù hợp để biểu diễn độ lớn của $df(t)$ so với $N$.
+\textbf{Một lưu ý:}\label{pr:log} $\log$ trong công thức \ref{eq:tfidf} là logarithm tự nhiên\footnote{kí hiệu giáo khoa thường là $\ln$}. Tuy nhiên nhiều tài liệu lại ghi là $\log_2$. Hai khái niệm này đều nhằm mục đích biểu diễn độ lớn của $df(t)$ so với $N$, và thường là dùng $\log_2$ hay $\ln$ đều không quan trọng.
 
 \begin{proof}
 Dùng công thức đổi cơ số $\log$:
@@ -197,7 +200,7 @@ Với $b = e, x = 2$, công thức trở thành
 \end{equation}
 Mà $\log_2(e)$ là một hằng số. Do đó $\ln(a)$ và $\log_2(a)$ chênh lệch nhau một hằng số $\log_2(e)$.
 \end{proof}
-Hiểu nôm na, kết quả $\ln$ chỉ cần nhân hằng số $\log_2(e)$ sẽ thành kết quả $\log_2$. Do đó, sử dụng hàm $\log$ nào không quan trọng.
+Hiểu nôm na, kết quả $\ln$ chỉ cần nhân hằng số $\log_2(e)$ sẽ thành kết quả $\log_2$. Do đó, sử dụng hàm $\log_2$ hay $\ln$ không quan trọng.
 
 \subsection{Cây quyết định (Decision Tree)}
 \subsubsection{Giới thiệu về Cây quyết định}
@@ -264,6 +267,7 @@ Khác với Entropy, ta chọn thuộc tính có Gini Index nhỏ nhất làm n�
 Độ đo Information Gains thể hiện lượng thông tin có được khi chọn một thuộc tính làm phép thử. Ngược lại, Gini Index thể hiện sự "tinh khiết"\footnote{impurity} của thông tin. Khi một thuộc tính có dữ liệu thuộc hoàn toàn về một lớp, ta có vài nhận xét sau:
 \begin{itemize}
 \item $A(I)$ của thuộc tính đó bằng 1.
+%TODO: here
 \item Gini của thuộc tính đó bằng 0.
 \begin{proof}
 Khi một thuộc tính có dữ liệu hoàn toàn thuộc về một lớp, $\exists i \in [1, n]$ sao cho $p_i = 1$. Hệ quả là $\displaystyle \sum_{i = 1}^{n} p_i^2 = 1$ và khi đó theo công thức \ref{eq:gini}, Gini = 0.
@@ -272,7 +276,7 @@ Khi một thuộc tính có dữ liệu hoàn toàn thuộc về một lớp, $\
 
 
 \section{Huấn luyện, Kiểm thử và Triển khai}
-Các mô hình được huấn luyện với bộ dataset như sau:
+Các mô hình được huấn luyện với bộ dataset có miêu tả như sau:
 \begin{itemize}
 	\item Kích thước training dataset: 44798 articles, đã gán nhãn.
 	\item Kích thước testing dataset: 100 articles, đã gán nhãn. Đây là 50 article chọn ngẫu nhiên từ tập True \& 50 article chọn ngẫu nhiên từ tập Fake.
@@ -280,10 +284,9 @@ Các mô hình được huấn luyện với bộ dataset như sau:
 \end{itemize}
 \subsection{Huấn luyện \& Kiểm thử các mô hình}
 \subsubsection{Decision Tree}
-Tiến hành huấn luyện mô hình Decision Tree với các thông số sau:
-\begin{itemize}
-	\item Bộ phân lớp: \texttt{sklearn.tree.DecisionTreeClassifier}
-	\item Tham số \texttt{criterion = 'entropy'} 
+Tiến hành huấn luyện mô hình với bộ phân lớp: \texttt{sklearn.tree.DecisionTreeClassifier}, sử dụng các tham số:
+\begin{itemize} 
+	\item \texttt{criterion}: entropy 
 \end{itemize}
 \begin{figure}[H]
 \begin{multicols}{2}
@@ -306,12 +309,11 @@ weighted avg & 1.00 & 1.00 & 1.00 & 100 \\
 \label{fig:heatmap_testing}
 \caption{Heatmap và \texttt{classification\_report} của \texttt{sklearn.tree.DecisionTreeClassifier}}
 \end{figure}
-Như có thể thấy, độ chính xác của mô hình là gần như tuyệt đối (1.00).
 
 \subsubsection{Logistic Regression}
-Bài toán Hồi quy (Regression) thường áp dụng cho tập nhãn liên tục, tuy nhiên ở đây ta vẫn dùng được cho tập nhãn rời rạc với hai nhãn $\{0, 1\}$. Cụ thể, hàm Logistic là một dạng hàm sigmoid, nhận đầu vào là một số $x$ và cho đầu ra là 0 hoặc 1, đúng như ý đồ mà chúng ta hướng tới: cho ra kết quả 0 (fake) hoặc 1 (true).
+Bài toán Hồi quy (Regression) thường áp dụng cho tập nhãn liên tục, tuy nhiên ở đây ta vẫn dùng được cho tập nhãn rời rạc với hai nhãn $\{0, 1\}$. Cụ thể, hàm Logistic trong Logistic Regression là một dạng hàm sigmoid, nhận đầu vào là một số $x$ và cho đầu ra là 0 hoặc 1, đúng như ý đồ mà chúng ta hướng tới: cho ra kết quả 0 (fake) hoặc 1 (true).
 
-Tiến hành huấn luyện mô hình với \texttt{sklearn.linear\_model.LogisticRegression}, dùng các tham số mặc định. 
+Tiến hành huấn luyện mô hình với bộ phân lớp \texttt{sklearn.linear\_model.LogisticRegression}, dùng các tham số mặc định. 
 \begin{figure}[H]
 	\begin{multicols}{2}
 		\includegraphics[scale=.5]{img/train-lr-result.png}
@@ -333,10 +335,93 @@ Tiến hành huấn luyện mô hình với \texttt{sklearn.linear\_model.Logist
 	\caption{Kết quả train và \texttt{classification\_report} của \texttt{sklearn.linear\_model.LogisticRegression}}
 \end{figure}
 \subsubsection{Stochastic Gradient Descent (SGD)}
+
 \subsubsection{Random Forest}
+Random Forest tạo ra một \textit{rừng} gồm có $t$ Decision Tree, sau đó tổng hợp (ensemble) và đưa ra dự đoán dựa trên bầu chọn (voting) kết quả.
+
+Tiến hành huấn luyện mô hình với bộ phân lớp \texttt{sklearn.ensemble.RandomForestClassifier}, dùng các tham số:
+\begin{itemize}
+\item \texttt{n\_estimators} (số cây - $t$): 100 (mặc định)
+\item \texttt{criterion}: entropy
+\end{itemize}
+
+\begin{figure}[H]
+	\begin{multicols}{2}
+		\includegraphics[scale=.5]{img/train-rf-result.png}
+		
+		\begin{table}[H]
+			\begin{tabular}{l l l l l}
+				\hline
+				& precision & recall & f1-score & support \\
+				\hline
+				0 & 1.00 & 1.00 & 1.00 & 50 \\
+				1 & 1.00 & 1.00 & 1.00 & 50 \\
+				accuracy &   &   & 1.00 & 100 \\
+				macro avg & 1.00 & 1.00 & 1.00 & 100 \\
+				weighted avg & 1.00 & 1.00 & 1.00 & 100 \\
+				\hline
+			\end{tabular}
+		\end{table}
+	\end{multicols}
+	\caption{Kết quả train và \texttt{classification\_report} của \texttt{sklearn.ensemble.RandomForestClassifier}}
+\end{figure}
+
 \subsubsection{Gradient Boosting}
+Phương pháp này dựa trên kết quả của nhiều mô hình học yếu (cụ thể ở đây là cây hồi quy - regression tree), sau đó tiến hành học và đưa ra kết quả dựa trên các kết quả này. Đặc điểm của phương pháp này là cho ra mô hình có độ chính xác cao hơn, sử dụng nhiều tham số hơn Random Forest.
+
+Tiến hành huấn luyện mô hình với bộ phân lớp \texttt{sklearn.ensemble.GradientBoostingClassifier}, dùng các tham số mặc định.
+\begin{figure}[H]
+	\begin{multicols}{2}
+		\includegraphics[scale=.5]{img/train-gb-result.png}
+		
+		\begin{table}[H]
+			\begin{tabular}{l l l l l}
+				\hline
+				& precision & recall & f1-score & support \\
+				\hline
+				0 & 1.00 & 1.00 & 1.00 & 50 \\
+				1 & 1.00 & 1.00 & 1.00 & 50 \\
+				accuracy &   &   & 1.00 & 100 \\
+				macro avg & 1.00 & 1.00 & 1.00 & 100 \\
+				weighted avg & 1.00 & 1.00 & 1.00 & 100 \\
+				\hline
+			\end{tabular}
+		\end{table}
+	\end{multicols}
+	\caption{Kết quả train và \texttt{classification\_report} của \texttt{sklearn.ensemble.GradientBoostingClassifier}}
+\end{figure}
+
 \subsubsection{k-Nearest Neighbors}
+Ý tưởng của mô hình k-Nearest Neighbors là xem xét $k$ điểm dữ liệu "hàng xóm" gần nhất của $x$ trong corpus, sau đó đưa ra đánh giá dựa trên $k$ điểm dữ liệu gần nhất vừa xét.\cite{Kowsari_2019}
+
+Tiến hành huấn luyện mô hình với bộ phân lớp \texttt{sklearn.ensemble.KNeighborsClassifier}, dùng các tham số sau:
+\begin{itemize}
+\item \texttt{weights}: distance, đánh giá dựa trên khoảng cách.
+\end{itemize}
+\begin{figure}[H]
+	\begin{multicols}{2}
+		\includegraphics[scale=.5]{img/train-knn-result.png}
+		
+		\begin{table}[H]
+			\begin{tabular}{l l l l l}
+				\hline
+				& precision & recall & f1-score & support \\
+				\hline
+				0 & 0.70 & 1.00 & 0.83 & 50 \\
+				1 & 1.00 & 0.58 & 0.73 & 50 \\
+				accuracy &   &   & 0.79 & 100 \\
+				macro avg & 0.85 & 0.79 & 0.78 & 100 \\
+				weighted avg & 0.85 & 0.79 & 0.78 & 100 \\
+				\hline
+			\end{tabular}
+		\end{table}
+	\end{multicols}
+	\caption{Kết quả train và \texttt{classification\_report} của \texttt{sklearn.ensemble.KNeighborsClassifier}}
+\end{figure}
+
 \subsubsection{Multinomial Na\"{\i}ve Bayes}
+Khác với mô hình Na\"{\i}ve Bayes truyền thống, Multinomial Na\"{\i}ve Bayes
+
 \subsubsection{Linear Support Vector Classifier (Linear SVC)}
 
 \subsection{Pipeline}
@@ -384,8 +469,8 @@ Các mô hình sẽ cùng đưa ra dự đoán cho một tập đặc trưng đ�
 \end{figure}
 
 \subsection{Demo}
-Ứng dụng sử dụng microframework Flask để deploy trên nền web. Giao diện sử dụng Bootstrap v5. Các bước cài đặt như sau:
-
+Ứng dụng sử dụng microframework Flask để deploy trên nền web, giao diện sử dụng Bootstrap v5.
+%TODO: add more here.
 
 \section{Tổng kết}
 \subsection{Nhận xét}
@@ -402,8 +487,8 @@ Tuy nhiên, đi kèm là một số khuyết điểm:
 \end{itemize}
 Với sản phẩm hoàn chỉnh, bạn đọc có thể xem tại \href{https://github.com/trhgquan/fakenews-detection}{GitHub Repository}.
 
-\subsection{Các hướng phát triển xa hơn}
-Với những ưu / khuyết điểm đã nêu trên, r
+\subsection{Các hướng phát triển tiếp theo}
+%TODO: here
 
 \cleardoublepage
 \phantomsection
