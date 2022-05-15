@@ -70,7 +70,7 @@ Trường Đại học Khoa học Tự nhiên - ĐHQG HCM\\
 \textsc{bộ môn công nghệ tri thức}\\[0.5cm]
 
 \HRule \\[0.4cm]
-{ 
+{
 \huge{\bfseries{Báo cáo Đồ án môn học}}\\[0.5cm]
 \large{\bfseries{Đề tài: \reportname}}
 }\\[0.4cm]
@@ -96,12 +96,12 @@ Thầy Nguyễn Hồng Bửu Long
 
 {\large \today}\\[2cm]
 
-\includegraphics[scale=.25]{img/hcmus-logo.png}\\[1cm] 
+\includegraphics[scale=.25]{img/hcmus-logo.png}\\[1cm]
 
 \vfill
 \end{titlepage}
-	
-	
+
+
 \tableofcontents
 \pagebreak
 
@@ -144,7 +144,7 @@ Dựa trên mô hình Cây quyết định (Decision Tree) và một số mô h�
 Ngữ liệu lấy từ Kaggle gồm 44898 bài báo, trích từ các nền tảng nổi tiếng trong năm 2017. \href{https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset}{Đường link đến dataset}. Cấu trúc file ngữ liệu bao gồm:
 \begin{itemize}
 \item File \texttt{True.csv} là các article \texttt{True (thật)}.
-\item File \texttt{Fake.csv} là các article \texttt{Fake (giả)}. 
+\item File \texttt{Fake.csv} là các article \texttt{Fake (giả)}.
 \end{itemize}
 
 \begin{figure}[H]
@@ -187,7 +187,7 @@ LONDON (Reuters) - Abdul Daoud spilt most of the cappuccino into the saucer the 
 
 \textbf{Sau}
 
-london  reuters    abdul daoud spilt most of the cappuccino into the saucer the first time he served princess diana  his nerves getting the better of him  almost  years on since she was killed when her car crashed in a paris tunnel  he still works surrounded by pictures of the woman he calls  the princess of the people  in his cafe  named diana  his very personal attempt to keep her memory alive 
+london  reuters    abdul daoud spilt most of the cappuccino into the saucer the first time he served princess diana  his nerves getting the better of him  almost  years on since she was killed when her car crashed in a paris tunnel  he still works surrounded by pictures of the woman he calls  the princess of the people  in his cafe  named diana  his very personal attempt to keep her memory alive
 \end{multicols}
 
 \subsection{Trích xuất đặc trưng (Feature Extraction)}
@@ -266,7 +266,7 @@ EH(A) = \sum_{i = 1}^{n}\left(\frac{p_i + n_i}{p + n}\right)H\left(\frac{p_i}{n_
 \end{equation}
 Khi đó độ đo Information Gains của thuộc tính $A$ là hiệu của \textbf{Entropy} và \textbf{Entropy kỳ vọng}:
 \begin{equation}
-A(I) = H\left(\frac{p}{n + p}, \frac{n}{n + p}\right) - EH(A) 
+A(I) = H\left(\frac{p}{n + p}, \frac{n}{n + p}\right) - EH(A)
 \end{equation}
 Ta sẽ chọn thuộc tính nào có Information Gains lớn nhất làm nút cha.
 
@@ -306,7 +306,7 @@ Các mô hình được huấn luyện với bộ dataset có miêu tả như sa
 \subsection{Huấn luyện \& Kiểm thử các mô hình}
 \subsubsection{Decision Tree}
 Tiến hành huấn luyện mô hình với bộ phân lớp: \texttt{sklearn.tree.DecisionTreeClassifier}, sử dụng các tham số:
-\begin{itemize} 
+\begin{itemize}
 	\item \texttt{criterion}: entropy
 	\item \texttt{random\_state}: 42
 \end{itemize}
@@ -348,7 +348,7 @@ Tiến hành huấn luyện mô hình với bộ phân lớp \texttt{sklearn.ens
 \begin{figure}[H]
 	\begin{multicols}{2}
 		\includegraphics[scale=.5]{img/train-rf-result.png}
-		
+
 		\begin{table}[H]
 			\begin{tabular}{l l l l l}
 				\hline
@@ -377,7 +377,7 @@ Kết quả huấn luyện như hình dưới:
 \begin{figure}[H]
 	\begin{multicols}{2}
 		\includegraphics[scale=.5]{img/train-gb-result.png}
-		
+
 		\begin{table}[H]
 			\begin{tabular}{l l l l l}
 				\hline
@@ -407,7 +407,7 @@ Kết quả huấn luyện như hình dưới:
 \begin{figure}[H]
 	\begin{multicols}{2}
 		\includegraphics[scale=.5]{img/train-knn-result.png}
-		
+
 		\begin{table}[H]
 			\begin{tabular}{l l l l l}
 				\hline
@@ -432,7 +432,7 @@ Tiến hành huấn luyện mô hình với bộ phân lớp \texttt{sklearn.nai
 \begin{figure}[H]
 	\begin{multicols}{2}
 		\includegraphics[scale=.5]{img/train-mnb-result.png}
-		
+
 		\begin{table}[H]
 			\begin{tabular}{l l l l l}
 				\hline
@@ -457,7 +457,7 @@ Tiến hành huấn luyện mô hình với bộ phân lớp \texttt{sklearn.lin
 \begin{figure}[H]
 	\begin{multicols}{2}
 		\includegraphics[scale=.5]{img/train-lr-result.png}
-		
+
 		\begin{table}[H]
 			\begin{tabular}{l l l l l}
 				\hline
@@ -486,7 +486,7 @@ Kết quả huấn luyện như hình dưới:
 \begin{figure}[H]
 	\begin{multicols}{2}
 		\includegraphics[scale=.5]{img/train-lsvc-result.png}
-		
+
 		\begin{table}[H]
 			\begin{tabular}{l l l l l}
 				\hline
@@ -515,7 +515,7 @@ Kết quả huấn luyện như hình dưới:
 \begin{figure}[H]
 	\begin{multicols}{2}
 		\includegraphics[scale=.5]{img/train-sgd-result.png}
-		
+
 		\begin{table}[H]
 			\begin{tabular}{l l l l l}
 				\hline
@@ -548,14 +548,14 @@ Các mô hình sẽ cùng đưa ra dự đoán cho một tập đặc trưng đ�
 		]
 		\node (dat) at (-5, -2.75) [draw=black!50, block] {Article};
 		\node (pp) at (-3, -2.75) [draw=black!50, block] {Preprocess};
-		
+
 		\node (vt) at (-.5, -2.43) [title] {Vectorizer};
 		\node (tf) [below=of vt.west, typetag, xshift=2mm] {TF-IDF};
-		
+
 		\node (vts) [draw=black!50, rounded corners, fit={(vt) (tf)}] {};
-		
+
 		\node (cl) at (2.5, 0) [title] {Classifier};
-		
+
 		\node (dt) [below=of cl.west, typetag, xshift=2mm] {Decision Tree};
 		\node (lr) [below=of dt.west, typetag] {Logistic Regression};
 		\node (sc) [below=of lr.west, typetag] {SGD};
@@ -564,11 +564,11 @@ Các mô hình sẽ cùng đưa ra dự đoán cho một tập đặc trưng đ�
 		\node (kn) [below=of gb.west, typetag] {K-Nearest Neighbors};
 		\node (nb) [below=of kn.west, typetag] {Multinomial NB};
 		\node (ls) [below=of nb.west, typetag] {Linear SVM};
-		
+
 		\node (cls) [draw=black!50, rounded corners, fit={(cl) (dt) (lr) (sc) (rf) (gb) (kn) (nb) (ls)}] {};
-		
+
 		\node (pred) at (7, -2.77) [draw=black!50, block] {Prediction};
-		
+
 		\draw [->] (dat) -- (pp);
 		\draw [->] (pp) -- (vts);
 		\draw [->] (vts) -- (cls);
