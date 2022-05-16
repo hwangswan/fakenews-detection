@@ -281,7 +281,9 @@ Khác với Entropy, ta chọn thuộc tính có Gini Index nhỏ nhất làm n�
 Độ đo Information Gains thể hiện lượng thông tin có được khi chọn một thuộc tính làm phép thử. Ngược lại, Gini Index thể hiện sự "tinh khiết"\footnote{impurity} của thông tin. Khi một thuộc tính có dữ liệu thuộc hoàn toàn về một lớp, ta có vài nhận xét sau:
 \begin{itemize}
 \item $A(I)$ của thuộc tính đó bằng 1.
-%TODO: here
+\begin{proof}
+Khi một thuộc tính có dữ liệu hoàn toàn thuộc về một lớp, $\exists i \in [1, n]$ sao cho $p_i = 1$. Hệ quả là $H(\textbf{p}) = 0$, dẫn đến Information Gains $A(I) = 1$.
+\end{proof}
 \item Gini của thuộc tính đó bằng 0.
 \begin{proof}
 Khi một thuộc tính có dữ liệu hoàn toàn thuộc về một lớp, $\exists i \in [1, n]$ sao cho $p_i = 1$. Hệ quả là $\displaystyle \sum_{i = 1}^{n} p_i^2 = 1$ và khi đó theo công thức \ref{eq:gini}, Gini = 0.
@@ -400,8 +402,8 @@ Kết quả huấn luyện như hình dưới:
 
 Tiến hành huấn luyện mô hình với bộ phân lớp \texttt{sklearn.ensemble.KNeighborsClassifier}, dùng các tham số sau:
 \begin{itemize}
-\item \texttt{n\_neighbors ($k$)}: 1
-\item \texttt{weights}: distance, đánh giá dựa trên khoảng cách.
+\item \texttt{n\_neighbors ($k$ điểm dữ liệu gần nhất)}: 1
+\item \texttt{weights}: distance (đánh giá dựa trên khoảng cách).
 \end{itemize}
 Kết quả huấn luyện như hình dưới:
 \begin{figure}[H]
@@ -476,7 +478,7 @@ Tiến hành huấn luyện mô hình với bộ phân lớp \texttt{sklearn.lin
 \end{figure}
 
 \subsubsection{Linear Support Vector Classifier (Linear SVC)}
-Thuật toán Support Vector Machine (SVM) là thuật toán ứng dụng hiệu quả trong bài toán phân lớp, đặc biệt là bài toán phân lớp nhị phân - đúng theo ý đồ ban đầu với tập nhãn \{0, 1\}.
+Thuật toán Support Vector Machine (SVM) có ứng dụng hiệu quả trong bài toán phân lớp, đặc biệt là bài toán phân lớp nhị phân. Chi tiết thuật toán để dành cho bạn đọc tìm hiểu.
 
 Tiến hành huấn luyện mô hình với bộ phân lớp \texttt{sklearn.svm.LinearSVC}, dùng các tham số:
 \begin{itemize}
@@ -505,7 +507,7 @@ Kết quả huấn luyện như hình dưới:
 \end{figure}
 
 \subsubsection{Stochastic Gradient Descent (SGD)}
-Thuật toán Stochastic Gradent Descent là một biến thể của Gradient Descent. Nội dung của hai thuật toán này để dành cho bạn đọc tìm hiểu thêm.
+Thuật toán Stochastic Gradent Descent (SGD) là một biến thể của Gradient Descent, trong đó thay vì lựa chọn các điểm dữ liệu một cách tuần tự như Gradent Descent thì thuật toán SGD sẽ lựa chọn ngẫu nhiên để làm giảm chi phí tính toán. Phát biểu và các chứng minh của hai thuật toán này để dành cho bạn đọc tìm hiểu thêm.
 
 Tiến hành huấn luyện mô hình với bộ phân lớp \texttt{sklearn.linear\_model.SGDClassifier}, dùng các tham số:
 \begin{itemize}
@@ -577,9 +579,8 @@ Các mô hình sẽ cùng đưa ra dự đoán cho một tập đặc trưng đ�
 	\caption{Fakenews Detection Pipeline}
 \end{figure}
 
-\subsection{Demo}
-Ứng dụng sử dụng microframework Flask để deploy trên nền web, giao diện sử dụng Bootstrap v5.
-%TODO: add more here.
+\subsection{Triển khai}
+Ứng dụng sử dụng microframework Flask để deploy trên nền web, giao diện sử dụng Bootstrap v5. Với sản phẩm hoàn chỉnh, bạn đọc có thể xem tại \href{https://github.com/trhgquan/fakenews-detection}{GitHub Repository}.
 
 \section{Tổng kết}
 \subsection{Nhận xét}
@@ -594,11 +595,16 @@ Tuy nhiên, đi kèm là một số khuyết điểm:
 \item Một số mô hình rất dễ bị overfit.
 \item Một số mô hình cần thời gian huấn luyện lâu hơn (e.g các thuật toán ensemble: Gradient Boosting, Random Forest).
 \item Xáo trộn dữ liệu có thể dẫn đến kết quả bị sai khác.\cite{Kowsari_2019}
+\item Các phương pháp BoW, TF-IDF không đảm bảo ngữ nghĩa của article.
 \end{itemize}
-Với sản phẩm hoàn chỉnh, bạn đọc có thể xem tại \href{https://github.com/trhgquan/fakenews-detection}{GitHub Repository}.
 
 \subsection{Các hướng phát triển tiếp theo}
-%TODO: here
+Một số hướng phát triển tiếp theo:
+\begin{itemize}
+\item Sử dụng học sâu thay cho học máy (vector hóa đoạn văn bằng Transformer, sau đó đưa vào mạng học sâu để đưa ra dự đoán). Phương pháp này đảm bảo ngữ nghĩa của article.
+\item Cải tiến các mô hình học máy đang có bằng cách hiệu chỉnh các tham số.
+\item Tiến hành huấn luyện lại với bộ ngữ liệu tin tức tiếng Việt hoặc một bộ ngữ liệu tin tức tiếng Anh mới nhất.
+\end{itemize}
 
 \cleardoublepage
 \phantomsection
