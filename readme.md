@@ -3,6 +3,8 @@
 
 VNUHCM - University of Science, mùa Xuân 2022
 
+[![Lint](https://github.com/trhgquan/fakenews-detection/actions/workflows/lint.yml/badge.svg)](https://github.com/trhgquan/fakenews-detection/actions/workflows/lint.yml)
+
 ## Abstract
 Đối với bài toán Text Classification, nhóm xây dựng ứng dụng phát hiện tin giả (Fakenews Detection), sử dụng kết hợp một số mô hình máy học để đưa ra dự đoán một mẩu tin là thật (true) hay giả (fake).
 
