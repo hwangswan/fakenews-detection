@@ -26,6 +26,10 @@ class Pipeline:
         with open(self.__model_folder + 'vectorizer.pkl', 'rb') as file_handler:
             self.__vectorizer = pkl.load(file_handler)
 
+    def get_classifiers_list(self) -> dict:
+        '''Get all classifiers this pipeline supports'''
+        return self.__classifiers_name
+
     def __load_classifier(self, classifier_name : str):
         '''Load a classifier from pickle file.
 
