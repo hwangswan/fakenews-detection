@@ -77,7 +77,7 @@ class Train:
             - Removing integers.
             - Removing punctutations and endlines.
         '''
-        punctuations = f'[{0}]'.format(string.punctuation)
+        punctuations = f'[{string.punctuation}]'
 
         text = text.lower()
         text = re.sub(r'\[.*?\]', '', text)
