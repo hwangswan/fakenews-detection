@@ -29,11 +29,3 @@ jobs:
     - name: Analysing the code with pylint
       run: |
         pylint $(git ls-files '*.py') --disable=duplicate-code
-
-  texlint:
-    name: TeX Linter
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: LaTeX linter (chktex)
-      uses: j2kun/chktex-action@1.0.3
