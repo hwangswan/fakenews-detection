@@ -1,8 +1,11 @@
 '''This module is the pipeline, clean and predict article'''
 
 import re
+import os
 import string
 import pickle as pkl
+
+from flask import current_app
 
 class Pipeline:
     '''The pipeline class'''
@@ -10,7 +13,7 @@ class Pipeline:
     def __init__(self) -> None:
         '''Initialise data'''
 
-        self.__model_folder = 'model/'
+        self.__model_folder = os.path.join(current_app.root_path, 'model/')
 
         self.__classifiers_name = {
             'logistic_regression' : 'Logistic Regression',
@@ -23,7 +26,9 @@ class Pipeline:
             'linear_svc' : 'Linear Support Vector Classifier'
         }
 
-        with open(self.__model_folder + 'vectorizer.pkl', 'rb') as file_handler:
+        vectorizer_path = os.path.join(self.__model_folder, 'vectorizer.pkl')
+
+        with open(vectorizer_path, 'rb') as file_handler:
             self.__vectorizer = pkl.load(file_handler)
 
     def get_classifiers_list(self) -> dict:
@@ -41,7 +46,9 @@ class Pipeline:
         if classifier_name not in self.__classifiers_name:
             raise AssertionError('Classifier not in known classifiers list')
 
-        with open(f'{0}{1}.pkl'.format(self.__model_folder, classifier_name), 'rb') as file_handler:
+        vectorizer_path = os.path.join(self.__model_folder, f'{classifier_name}.pkl')
+
+        with open(vectorizer_path, 'rb') as file_handler:
             classifier = pkl.load(file_handler)
 
         return classifier
@@ -56,7 +63,7 @@ class Pipeline:
         Output:
             - str
         '''
-        punctuations = f'[{0}]'.format(string.punctuation)
+        punctuations = f'[{string.punctuation}]'
 
         text = text.lower()
         text = re.sub(r'\[.*?\]', '', text)
@@ -81,7 +88,7 @@ class Pipeline:
         sentences = [Pipeline.preprocess(s) for s in sentences]
         classifier = self.__load_classifier(classifier)
         v_sentences = self.__vectorizer.transform(sentences)
-        return classifier.predict(v_sentences)
+        return classifier.predict(v_sentences).tolist()
 
     def predict_all(self, sentences : list) -> dict:
         '''Predict a list of sentences with all available classifiers.
@@ -93,6 +100,6 @@ class Pipeline:
         '''
         result = {}
         for classifier_key in self.__classifiers_name:
-            result[classifier_key] = self.predict(classifier_key, sentences)
+            result[classifier_key] = self.predict(classifier_key, sentences)[0]
 
         return result

@@ -62,7 +62,7 @@ class Train:
     def __dump(self, variable, filename : str):
         '''Dump a variable to pickle file.
         '''
-        with open(self.__model_dir + f'{0}.pkl'.format(filename), 'wb') as file_handler:
+        with open(self.__model_dir + f'{filename}.pkl', 'wb') as file_handler:
             pkl.dump(variable, file_handler)
 
         print('Finished dumping', filename, end = '\n\n')

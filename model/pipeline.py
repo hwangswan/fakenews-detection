@@ -41,7 +41,7 @@ class Pipeline:
         if classifier_name not in self.__classifiers_name:
             raise AssertionError('Classifier not in known classifiers list')
 
-        with open(f'{0}{1}.pkl'.format(self.__model_folder, classifier_name), 'rb') as file_handler:
+        with open(f'{self.__model_folder}{classifier_name}.pkl', 'rb') as file_handler:
             classifier = pkl.load(file_handler)
 
         return classifier
