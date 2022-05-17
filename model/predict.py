@@ -1,7 +1,17 @@
-from pipeline import Pipeline
-import getopt, sys
+"""This module predict an article, giving an input file"""
 
-def main(argv):
+import getopt
+import sys
+from pipeline import Pipeline
+
+def main(argv : list) -> None:
+    """Main function
+
+    Input:
+        - argv: arguments array
+    Output:
+        - None
+    """
     input_file, classifier = '', ''
     all_classifier = False
 
@@ -28,15 +38,15 @@ def main(argv):
         sys.exit(2)
 
     try:
-        p = Pipeline()
+        pipeline = Pipeline()
 
-        with open(input_file, 'r+') as f:
-            article = f.read()
+        with open(input_file, 'r+', encoding='utf8') as file_handler:
+            article = file_handler.read()
 
             if not all_classifier:
-                print(p.predict(classifier, [article]))
+                print(pipeline.predict(classifier, [article]))
             else:
-                print(p.predict_all([article]))
+                print(pipeline.predict_all([article]))
     except AssertionError:
         print('Classifier not found:', classifier)
 

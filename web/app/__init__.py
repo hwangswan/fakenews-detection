@@ -1,14 +1,18 @@
+'''Init Flask app'''
+
 import os
 
 from flask import Flask, render_template
 from flask_restful import Api
 
-from .modules.Detection import Detection
+from .modules.detection import Detection
 from .modules.pipeline import Pipeline
 
 def create_app(test_config = None):
+    '''Create a Flask app'''
+
     app = Flask(__name__, instance_relative_config = True)
-    
+
     app.config.from_mapping(
         SECRET_KEY='1337'
     )
@@ -23,7 +27,7 @@ def create_app(test_config = None):
         os.makedirs(app.instance_path)
     except OSError:
         pass
-    
+
     api = Api(app)
     api.add_resource(Detection, '/detect', endpoint = 'detect')
 

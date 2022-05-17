@@ -1,8 +1,15 @@
+'''This module is the pipeline, clean and predict article'''
+
+import re
+import string
 import pickle as pkl
-import re, string
 
 class Pipeline:
-    def __init__(self):
+    '''The pipeline class'''
+
+    def __init__(self) -> None:
+        '''Initialise data'''
+
         self.__model_folder = 'model/'
 
         self.__classifiers_name = {
@@ -16,8 +23,12 @@ class Pipeline:
             'linear_svc' : 'Linear Support Vector Classifier'
         }
 
-        with open(self.__model_folder + 'vectorizer.pkl', 'rb') as f:
-            self.__vectorizer = pkl.load(f)
+        with open(self.__model_folder + 'vectorizer.pkl', 'rb') as file_handler:
+            self.__vectorizer = pkl.load(file_handler)
+
+    def get_classifiers_list(self) -> dict:
+        '''Get all classifiers this pipeline supports'''
+        return self.__classifiers_name
 
     def __load_classifier(self, classifier_name : str):
         '''Load a classifier from pickle file.
@@ -27,11 +38,12 @@ class Pipeline:
         Output:
             - Classifier object
         '''
-        assert classifier_name in self.__classifiers_name.keys()
+        if classifier_name not in self.__classifiers_name:
+            raise AssertionError('Classifier not in known classifiers list')
 
-        with open('{0}{1}.pkl'.format(self.__model_folder, classifier_name), 'rb') as f:
-            classifier = pkl.load(f)
-        
+        with open(f'{self.__model_folder}{classifier_name}.pkl', 'rb') as file_handler:
+            classifier = pkl.load(file_handler)
+
         return classifier
 
     @staticmethod
@@ -40,21 +52,21 @@ class Pipeline:
 
         Input:
             - text : str
-        
+
         Output:
             - str
         '''
-        punctuations = '[{0}]'.format(string.punctuation)
+        punctuations = f'[{string.punctuation}]'
 
         text = text.lower()
-        text = re.sub('\[.*?\]', '', text)
-        text = re.sub('\\W', ' ', text)
-        text = re.sub('https?://\S+|www\.\S+', '', text)
-        text = re.sub('<.*?>+', '', text)
+        text = re.sub(r'\[.*?\]', '', text)
+        text = re.sub(r'\\W', ' ', text)
+        text = re.sub(r'https?://\S+|www\.\S+', '', text)
+        text = re.sub(r'<.*?>+', '', text)
         text = re.sub(punctuations, '', text)
-        text = re.sub('\n', '', text)
-        text = re.sub('\w*\d\w*', '', text)
-        
+        text = re.sub(r'\n', '', text)
+        text = re.sub(r'\w*\d\w*', '', text)
+
         return text
 
     def predict(self, classifier : str, sentences : list) -> list:
@@ -70,7 +82,7 @@ class Pipeline:
         classifier = self.__load_classifier(classifier)
         v_sentences = self.__vectorizer.transform(sentences)
         return classifier.predict(v_sentences)
-    
+
     def predict_all(self, sentences : list) -> dict:
         '''Predict a list of sentences with all available classifiers.
 
@@ -80,7 +92,7 @@ class Pipeline:
             - Dictionary of keys -> classifier key, value -> predicted labels.
         '''
         result = {}
-        for classifier_key in self.__classifiers_name.keys():
+        for classifier_key in self.__classifiers_name:
             result[classifier_key] = self.predict(classifier_key, sentences)
-        
+
         return result

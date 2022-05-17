@@ -1,5 +1,7 @@
-import pandas as pd
+"""This module clean data"""
+
 import sys
+import pandas as pd
 
 __RANDOM_STATE__ = 42
 
@@ -8,7 +10,14 @@ __FAKE_CSV__ = 'dataset/Fake.csv'
 __TRAIN_CSV__ = 'dataset/train.csv'
 __TEST_CSV__ = 'dataset/test.csv'
 
-def clean():
+def clean() -> None:
+    """Clean data function
+
+    Input:
+        - None
+    Output:
+        - None
+    """
     try:
         fake_df = pd.read_csv(__FAKE_CSV__)
         true_df = pd.read_csv(__TRUE_CSV__)
