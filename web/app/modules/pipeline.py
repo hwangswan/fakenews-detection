@@ -26,10 +26,21 @@ class Pipeline:
             'linear_svc' : 'Linear Support Vector Classifier'
         }
 
+        # Load classifier
         vectorizer_path = os.path.join(self.__model_folder, 'vectorizer.pkl')
+
+        if not os.path.exists(vectorizer_path):
+            file_error = FileNotFoundError('Vectorizer not found: vectorizer.pkl')
+            raise file_error
 
         with open(vectorizer_path, 'rb') as file_handler:
             self.__vectorizer = pkl.load(file_handler)
+
+        # Check for model existance
+        for classifier in self.__classifiers_name:
+            if not os.path.exists(self.__model_folder + f'{classifier}.pkl'):
+                file_error = FileNotFoundError(f'Model not found: {classifier}.pkl')
+                raise file_error
 
     def get_classifiers_list(self) -> dict:
         '''Get all classifiers this pipeline supports'''
@@ -46,9 +57,9 @@ class Pipeline:
         if classifier_name not in self.__classifiers_name:
             raise AssertionError('Classifier not in known classifiers list')
 
-        vectorizer_path = os.path.join(self.__model_folder, f'{classifier_name}.pkl')
+        classifier_path = os.path.join(self.__model_folder, f'{classifier_name}.pkl')
 
-        with open(vectorizer_path, 'rb') as file_handler:
+        with open(classifier_path, 'rb') as file_handler:
             classifier = pkl.load(file_handler)
 
         return classifier

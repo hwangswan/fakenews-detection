@@ -1,6 +1,7 @@
 '''This module is the pipeline, clean and predict article'''
 
 import re
+import os
 import string
 import pickle as pkl
 
@@ -23,8 +24,17 @@ class Pipeline:
             'linear_svc' : 'Linear Support Vector Classifier'
         }
 
+        # Load vectorizer
+        if not os.path.exists(self.__model_folder + 'vectorizer.pkl'):
+            raise FileNotFoundError('Vectorizer not found: vectorizer.pkl')
+
         with open(self.__model_folder + 'vectorizer.pkl', 'rb') as file_handler:
             self.__vectorizer = pkl.load(file_handler)
+
+        # Check model existance
+        for classifier in self.__classifiers_name:
+            if not os.path.exists(self.__model_folder + f'{classifier}.pkl'):
+                raise FileNotFoundError(f'Model not found: {classifier}.pkl')
 
     def get_classifiers_list(self) -> dict:
         '''Get all classifiers this pipeline supports'''
