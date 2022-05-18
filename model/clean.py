@@ -22,7 +22,7 @@ def clean() -> None:
         fake_df = pd.read_csv(__FAKE_CSV__)
         true_df = pd.read_csv(__TRUE_CSV__)
     except FileNotFoundError:
-        print('Cannot find dataset')
+        print('Original Dataset not found.')
         sys.exit(2)
 
     # Add labels
