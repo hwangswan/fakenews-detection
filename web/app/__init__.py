@@ -22,7 +22,6 @@ def create_app(test_config = None):
     else:
         app.config.from_mapping(test_config)
 
-
     try:
         os.makedirs(app.instance_path)
     except OSError:
@@ -35,8 +34,8 @@ def create_app(test_config = None):
     def index():
         try:
             classifiers_list = Pipeline().get_classifiers_list()
-        except FileNotFoundError:
-            return render_template('html/404.html')
+        except FileNotFoundError as file_error:
+            return render_template('html/404.html', message = str(file_error))
 
         return render_template('html/index.html', classifiers_list = classifiers_list)
 
