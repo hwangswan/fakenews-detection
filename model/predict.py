@@ -49,6 +49,8 @@ def main(argv : list) -> None:
                 print(pipeline.predict_all([article]))
     except AssertionError:
         print('Classifier not found:', classifier)
+    except FileNotFoundError as file_error:
+        print(str(file_error))
 
 if __name__ == '__main__':
     main(sys.argv[1:])
