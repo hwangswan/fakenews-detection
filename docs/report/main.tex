@@ -3,6 +3,7 @@
 \usepackage{amsmath, amsfonts, amsthm}
 \usepackage{float}
 \usepackage{fancyhdr}
+\usepackage{listings}
 \usepackage{graphicx}
 \usepackage[colorlinks=true,linkcolor=blue, citecolor=red]{hyperref}
 \usepackage{url}
@@ -12,6 +13,33 @@
 \usepackage[utf8]{vietnam}
 \usepackage{multicol}
 \usepackage{tikz}
+
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+}
+
+\lstset{style=mystyle}
 
 \usetikzlibrary{calc,trees,positioning,arrows.meta,chains,shapes.geometric, decorations.pathreplacing,decorations.pathmorphing,shapes, matrix,shapes.symbols, fit}
 \tikzset{
@@ -589,7 +617,64 @@ Các mô hình sẽ cùng đưa ra dự đoán cho một tập đặc trưng đ�
 \end{figure}
 
 \subsection{Triển khai}
-Ứng dụng sử dụng microframework Flask để deploy trên nền web, giao diện sử dụng Bootstrap v5. Sản phẩm hoàn chỉnh và hướng dẫn cài đặt ở \href{https://github.com/trhgquan/fakenews-detection}{GitHub Repository}.
+Ứng dụng sử dụng microframework Flask để deploy trên nền web, giao diện sử dụng Bootstrap v5. \href{https://github.com/trhgquan/fakenews-detection}{GitHub Repository của project}.
+
+\subsubsection{Cài đặt demo}
+Thực hiện cài đặt demo theo các bước sau:
+\begin{enumerate}
+\item Download demo (web + model trong 1 file zip duy nhất) ở \href{https://drive.google.com/file/d/1-7jwQowqCDU2bm2mvWxMoZPpKBew35E-/view?usp=sharing}{link này (Google Drive)}.
+\item Giải nén file \texttt{web.zip} thành folder \texttt{web}.
+\item Browse vào folder \texttt{web}, sau đó 
+\item Cài đặt virtual environment và kích hoạt virtual environment:
+\begin{lstlisting}[language=bash]
+# Create virtual environment
+python -m venv venv
+
+# and activate it.
+. venv/bin/activate
+\end{lstlisting}
+
+\item Vẫn ở folder \texttt{web}, cài đặt các package cần thiết với \texttt{pip}:
+\begin{lstlisting}[language=bash]
+pip install -r requirements.txt
+\end{lstlisting}
+
+\item Cấp quyền và chạy file \texttt{run\_server.sh} là demo hoạt động:
+\begin{lstlisting}[language=bash]
+# Grand execute permission
+sudo chmod 0700 run_server.sh
+
+# Run server
+bash run_server.sh
+\end{lstlisting}
+\end{enumerate}
+
+Từ đây về sau, mỗi lần chạy chỉ cần browse vào thư mục \texttt{web}, kích hoạt virtual environment và chạy \texttt{run\_server.sh} là demo sẽ hoạt động.
+
+\subsubsection{Sử dụng}
+Demo đưa ra đánh giá dựa trên nội dung của article. Có thể tham khảo một file article demo ở \href{https://github.com/trhgquan/fakenews-detection/blob/main/model/demo.txt}{link này}.
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.3]{img/homepage.png}
+\caption{Người dùng nhập article cần kiểm tra vào input box, sau đó nhấn nút \textbf{Fake or True?}}
+\label{fig:homepage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.3]{img/fake-result.png}
+\caption{Nếu article được predict là tin \textbf{Fake}, giao diện hiển thị như sau:}
+\label{fig:fake-result}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.3]{img/true-result.png}
+\caption{Nếu article được predict là tin \textbf{True}, giao diện hiển thị như sau}
+\label{fig:true-result}
+\end{figure}
 
 \section{Tổng kết}
 \subsection{Nhận xét}

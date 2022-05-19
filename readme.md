@@ -35,9 +35,6 @@ Download dataset và giải nén vào folder `model/dataset`.
 
 Các tham số của từng mô hình, xem trong notebook `model/notebooks/model-training.ipynb` hoặc `model/train.py`.
 
-### Pre-trained model
-Bộ model pre-trained: https://drive.google.com/file/d/1-6s2UfvsORSL3Vrc_mG2sBEGfRWuX0-k/view?usp=sharing
-
 ### Re-train model
 - Cài các package cần thiết:
     ```
@@ -98,6 +95,8 @@ Yêu cầu:
 - Đã migrate model.
 
 Các bước này đã nêu lần lượt bên trên.
+
+Link download folder `web` có model train sẵn: https://drive.google.com/file/d/1-7jwQowqCDU2bm2mvWxMoZPpKBew35E-/view?usp=sharing
 
 #### Linux
 ```
