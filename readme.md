@@ -16,6 +16,7 @@ Fake and real news dataset (Kaggle): https://www.kaggle.com/datasets/clmentbisai
 Download dataset và giải nén vào folder `model/dataset`.
 
 ## Model
+
 ### Summarise
 |classifier|accuracy|
 |----------|--------|
@@ -32,9 +33,12 @@ Download dataset và giải nén vào folder `model/dataset`.
 - Kích thước tập test: 100 samples (50 random real, 50 random fake).
 - TfidfVectorizer vocabulary size: 121613.
 
-Các tham số của từng mô hình, xem trong notebook `model/model-training.py` hoặc `model/train.py`.
+Các tham số của từng mô hình, xem trong notebook `model/notebooks/model-training.ipynb` hoặc `model/train.py`.
 
-### Generate
+### Pre-trained model
+Bộ model pre-trained: https://drive.google.com/file/d/1-6s2UfvsORSL3Vrc_mG2sBEGfRWuX0-k/view?usp=sharing
+
+### Re-train model
 - Cài các package cần thiết:
     ```
     pip install -r requirements.txt
@@ -52,7 +56,8 @@ Các tham số của từng mô hình, xem trong notebook `model/model-training.
     ```
     File model sẽ được lưu trong folder `model/model`.
 
-- Data migration sang server: copy `model/model` sang `web/app/model`; hoặc chạy `model/migrate.sh`:
+### Migration
+Data migration: copy `model/model` sang `web/app/model`; hoặc chạy `model/migrate.sh`:
     ```
     cd model
     bash migrate.sh
