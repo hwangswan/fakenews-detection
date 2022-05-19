@@ -127,3 +127,6 @@ Chạy server:
 #### Tech used
 - Flask
 - Bootstrap v5 (có jQuery)
+
+## LICENSE
+Licensed under [GNU General Public License v3.0](LICENSE)
