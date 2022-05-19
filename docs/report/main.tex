@@ -201,20 +201,20 @@ W(d, t) = TF(d, t) \times \log\left(\frac{N}{df(t)}\right)
 \end{equation}
 Với $N$ là tổng số document, $df(t)$ là tổng số lượng document chứa term $t$, $TF(d, t)$ là số lần xuất hiện của từ $t$ trong document $d$.
 
-\textbf{Một lưu ý:}\label{pr:log} $\log$ trong công thức \ref{eq:tfidf} là logarithm tự nhiên\footnote{kí hiệu giáo khoa thường là $\ln$}. Tuy nhiên nhiều tài liệu lại ghi là $\log_2$. Hai khái niệm này đều nhằm mục đích biểu diễn độ lớn của $df(t)$ so với $N$, và thường là dùng $\log_2$ hay $\ln$ đều không quan trọng.
+\textbf{Một lưu ý:}\label{pr:log} $\log(x)$ trong công thức \ref{eq:tfidf} là logarithm tự nhiên\footnote{kí hiệu giáo khoa thường thấy là $\ln(x)$}. Tuy nhiên nhiều tài liệu lại ghi là $\log_2(x)$. Hai khái niệm này đều nhằm mục đích biểu diễn độ lớn của $df(t)$ so với $N$, và thường là dùng $\log_2(x)$ hay $\ln(x)$ đều không quan trọng.
 
 \begin{proof}
 Dùng công thức đổi cơ số $\log$:
 \begin{equation}
-\log_b(a) = \frac{\log_x(a)}{\log_x(b)}
+\log_a(x) = \frac{\log_k(x)}{\log_k(a)}
 \end{equation}
-Với $b = e, x = 2$, công thức trở thành
+Với $a = e, k = 2$, công thức trở thành
 \begin{equation}
-\ln(a) = \frac{\log_2(a)}{\log_2(e)} \iff \ln(a)\log_2(e) = \log_2(a)
+\ln(x) = \frac{\log_2(x)}{\log_2(e)} \iff \ln(x)\log_2(e) = \log_2(x)
 \end{equation}
-Mà $\log_2(e)$ là một hằng số. Do đó $\ln(a)$ và $\log_2(a)$ chênh lệch nhau một hằng số $\log_2(e)$.
+Mà $\log_2(e)$ là một hằng số. Do đó $\ln(x)$ và $\log_2(x)$ chênh lệch nhau một hằng số $\log_2(e)$.
 \end{proof}
-Hiểu nôm na, kết quả $\ln$ chỉ cần nhân hằng số $\log_2(e)$ sẽ thành kết quả $\log_2$. Do đó, sử dụng hàm $\log_2$ hay $\ln$ không quan trọng.
+Hiểu nôm na, kết quả $\ln(x)$ chỉ cần nhân hằng số $\log_2(x)$ sẽ thành kết quả $\log_2(x)$. Do đó, sử dụng hàm $\log_2(x)$ hay $\ln(x)$ không quan trọng.
 
 \subsection{Cây quyết định (Decision Tree)}
 \subsubsection{Giới thiệu về Cây quyết định}
@@ -254,7 +254,7 @@ Gọi $\mathbf{p} = (p_1, p_2, .., p_n)$ là phân phối sao cho biến ngẫu 
 H(\mathbf{p}) = -\sum_{i = 1}^n p_i \log(p_i)
 \end{equation}
 
-Như đã nói ở chứng minh \ref{pr:log}, $\log$ ở đây có thể là $\log_2$ hoặc $\ln$ đều được.
+Như đã nói ở chứng minh \ref{pr:log}, $\log(x)$ ở đây có thể là $\log_2(x)$ hoặc $\ln(x)$ đều được.
 
 \textbf{Một ví dụ} một tập dữ liệu có $p$ mẫu được gán nhãn \textit{positive} và $n$ mẫu được gán nhãn \textit{negative}. Khi đó entropy $H(\frac{p}{n + p}, \frac{n}{n + p})$ được tính như sau:
 $$
@@ -278,18 +278,27 @@ Gini Index được tính toán như sau:
 Khác với Entropy, ta chọn thuộc tính có Gini Index nhỏ nhất làm nút cha, sau đó tính toán Gini Index với các nút còn lại.
 
 \subsubsection{Ý nghĩa các độ đo}
-Độ đo Information Gains thể hiện lượng thông tin có được khi chọn một thuộc tính làm phép thử. Ngược lại, Gini Index thể hiện sự "tinh khiết"\footnote{impurity} của thông tin. Khi một thuộc tính có dữ liệu thuộc hoàn toàn về một lớp, ta có vài nhận xét sau:
+Độ đo Information Gains thể hiện lượng thông tin có được khi chọn một thuộc tính làm phép thử. Ngược lại, Gini Index thể hiện sự "tinh khiết"\footnote{impurity - thông tin thuần một lớp, không lẫn lộn các lớp với nhau.} của thông tin. Khi một thuộc tính có dữ liệu thuộc hoàn toàn về một lớp, ta có vài nhận xét sau:
 \begin{itemize}
 \item $A(I)$ của thuộc tính đó bằng 1.
 \begin{proof}
-Khi một thuộc tính có dữ liệu hoàn toàn thuộc về một lớp, $\exists i \in [1, n]$ sao cho $p_i = 1$. Hệ quả là $H(\textbf{p}) = 0$, dẫn đến Information Gains $A(I) = 1$.
+Nhắc lại:
+\begin{itemize}
+\item Khi $x = 1$, $x\log(x) = 0$ vì $\log(1) = 0$.
+\item Khi $x \rightarrow 0: 
+\displaystyle
+\lim_{x \rightarrow 0}\left[x\log(x)\right] = \lim_{x \rightarrow 0}\left[\frac{\log(x)}{\frac{1}{x}}\right] \overset{(H)}= \lim_{x \rightarrow 0} \left[\frac{\frac{1}{x}}{\frac{-1}{x^2}}\right] = \lim_{x \rightarrow 0} [-x] = 0
+$
+
+\end{itemize}
+Khi một thuộc tính có dữ liệu hoàn toàn thuộc về một lớp, $\exists i \in [1, n]$ sao cho $p_i = 1$. Hệ quả là $\displaystyle H(\textbf{p}) = \sum_{i = 1}^n p_i\log(p_i) = 0$, dẫn đến Information Gains $A(I) = 1$.
 \end{proof}
 \item Gini của thuộc tính đó bằng 0.
 \begin{proof}
 Khi một thuộc tính có dữ liệu hoàn toàn thuộc về một lớp, $\exists i \in [1, n]$ sao cho $p_i = 1$. Hệ quả là $\displaystyle \sum_{i = 1}^{n} p_i^2 = 1$ và khi đó theo công thức \ref{eq:gini}, Gini = 0.
 \end{proof}
 \end{itemize}
-
+Từ đó, ta có cơ sở để chọn thuộc tính có Information Gains lớn nhất và Gini nhỏ nhất. Các thuộc tính này sẽ tách các dòng dữ liệu thuộc hoàn toàn về một lớp, hoặc là cơ sở để phân lớp cho nhiều dòng dữ liệu.
 
 \section{Huấn luyện, Kiểm thử và Triển khai}
 Các mô hình được huấn luyện với bộ dataset có miêu tả như sau:
@@ -580,7 +589,7 @@ Các mô hình sẽ cùng đưa ra dự đoán cho một tập đặc trưng đ�
 \end{figure}
 
 \subsection{Triển khai}
-Ứng dụng sử dụng microframework Flask để deploy trên nền web, giao diện sử dụng Bootstrap v5. Sản phẩm hoàn chỉnh có ở  \href{https://github.com/trhgquan/fakenews-detection}{GitHub Repository}.
+Ứng dụng sử dụng microframework Flask để deploy trên nền web, giao diện sử dụng Bootstrap v5. Sản phẩm hoàn chỉnh và hướng dẫn cài đặt ở \href{https://github.com/trhgquan/fakenews-detection}{GitHub Repository}.
 
 \section{Tổng kết}
 \subsection{Nhận xét}
@@ -601,6 +610,7 @@ Tuy nhiên, đi kèm là một số khuyết điểm:
 \subsection{Các hướng phát triển tiếp theo}
 Một số hướng phát triển tiếp theo:
 \begin{itemize}
+\item Cân nhắc sử dụng một số phương pháp trích xuất đặc trưng khác ngoài TF-IDF.
 \item Sử dụng học sâu thay cho học máy (vector hóa đoạn văn bằng Transformer, sau đó đưa vào mạng học sâu để đưa ra dự đoán). Phương pháp này đảm bảo ngữ nghĩa của article.
 \item Cải tiến các mô hình học máy đang có bằng cách hiệu chỉnh các tham số.
 \item Tiến hành huấn luyện lại với bộ ngữ liệu tin tức tiếng Việt hoặc một bộ ngữ liệu tin tức tiếng Anh mới nhất.
